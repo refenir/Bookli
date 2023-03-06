@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Bookli</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="upcoming_appointments"><u>Upcoming Appointments</u></string>
+    <string name="search_input">Search...</string>
+    <string name="rooms">Rooms</string>
+    <string name="capacity_2">Capacity: 2</string>
+    <string name="book">Book</string>
+    <string name="capacity_5">Capacity: 5</string>
+</resources>
