@@ -63,6 +63,9 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
 
         // hide booking view initially
         bookingView.setVisibility(View.INVISIBLE);
+        bookingView.animate().translationYBy(1000);
+        rooms.animate().setDuration(500);
+        bookingView.animate().setDuration(500);
         isUp = false;
 
     }
@@ -113,7 +116,6 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
         animate.setDuration(500);
         animate.setFillAfter(true);
         view.startAnimation(animate);
-        view.setVisibility(View.INVISIBLE);
     }
 
     private void setUpRoomModels(){
@@ -133,11 +135,15 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
     @Override
     public void onClick(View view, int position) {
         if (isUp) {
-            slideDown(bookingView);
-            slideDownRooms(rooms);
+
+            bookingView.animate().translationYBy(1000);
+//            slideDown(bookingView);
+            rooms.animate().x(0).y(0);
         } else {
-            slideUp(bookingView);
-            slideUpRooms(rooms);
+//            slideUp(bookingView);
+            bookingView.setVisibility(View.VISIBLE);
+            bookingView.animate().translationYBy(-1000);
+            rooms.animate().x(0).y(-250);
         }
         isUp = !isUp;
     }
