@@ -4,7 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,9 +18,14 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
 
     Context context;
     ArrayList<RoomModel> roomModels;
-    public Room_RecyclerViewAdapter(Context context, ArrayList<RoomModel> roomModels){
+    private final OnItemClickListener clickListener;
+    RelativeLayout bookingView;
+    public Room_RecyclerViewAdapter(Context context, ArrayList<RoomModel> roomModels,
+                                    OnItemClickListener clickListener, RelativeLayout bookingView){
         this.context = context;
         this.roomModels = roomModels;
+        this.clickListener = clickListener;
+        this.bookingView = bookingView;
     }
     @NonNull
     @Override
@@ -26,8 +33,7 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
        // This is where you inflate the layout (Giving a look to the rows)
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recycler_view_item, parent, false);
-
-        return new Room_RecyclerViewAdapter.MyViewHolder(view);
+        return new Room_RecyclerViewAdapter.MyViewHolder(view, clickListener, bookingView);
     }
 
     @Override
@@ -43,17 +49,35 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
         return roomModels.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements OnItemClickListener{
         // Grabbing views from recycler_view_row layout file
 
         ImageView imageView;
         TextView roomName;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView, OnItemClickListener clickListener, View myView) {
             super(itemView);
-
             imageView = itemView.findViewById(R.id.imageView);
             roomName = itemView.findViewById(R.id.textView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (clickListener != null) {
+                        int pos = getAdapterPosition();
+
+                        if (pos != RecyclerView.NO_POSITION){
+                            clickListener.onClick(myView, pos);
+                        }
+                    }
+                }
+            });
         }
+
+        @Override
+        public void onClick(View view, int position) {
+
+        }
+
+
     }
 }

@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
@@ -13,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bookli.OnItemClickListener;
 import com.example.bookli.R;
 import com.example.bookli.RoomModel;
 import com.example.bookli.Room_RecyclerViewAdapter;
@@ -22,12 +26,15 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements OnItemClickListener {
 
     private FragmentHomeBinding binding;
 
     ArrayList<RoomModel> roomModels = new ArrayList<>();
     int[] roomImages = {R.mipmap.dr21_foreground, R.mipmap.dr22_foreground, R.mipmap.dr23_foreground, R.mipmap.dr301_foreground};
+    RelativeLayout bookingView;
+    RelativeLayout rooms;
+    boolean isUp;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -36,6 +43,7 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
 
         return root;
     }
@@ -46,9 +54,66 @@ public class HomeFragment extends Fragment {
 
         setUpRoomModels();
 
-        Room_RecyclerViewAdapter adapter = new Room_RecyclerViewAdapter( requireContext(), roomModels);
+        Room_RecyclerViewAdapter adapter = new Room_RecyclerViewAdapter( requireContext(), roomModels, this, bookingView);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, true));
+
+        bookingView = view.findViewById(R.id.booking);
+        rooms = view.findViewById(R.id.rooms);
+
+        // hide booking view initially
+        bookingView.setVisibility(View.INVISIBLE);
+        isUp = false;
+
+    }
+
+    // slide the view from below itself to the current position
+    public void slideUp(View view){
+        view.setVisibility(View.VISIBLE);
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                view.getHeight(),  // fromYDelta
+                0);                // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+    }
+
+    public void slideUpRooms(View view){
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                0,  // fromYDelta
+                -250);                // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+    }
+
+    // slide the view from its current position to below itself
+    public void slideDown(View view){
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                0,                 // fromYDelta
+                view.getHeight()); // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+        view.setVisibility(View.INVISIBLE);
+    }
+
+    public void slideDownRooms(View view){
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                -250,                 // fromYDelta
+                0); // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+        view.setVisibility(View.INVISIBLE);
     }
 
     private void setUpRoomModels(){
@@ -63,5 +128,17 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+        if (isUp) {
+            slideDown(bookingView);
+            slideDownRooms(rooms);
+        } else {
+            slideUp(bookingView);
+            slideUpRooms(rooms);
+        }
+        isUp = !isUp;
     }
 }

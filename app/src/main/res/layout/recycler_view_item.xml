@@ -14,7 +14,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:cardElevation="10dp"
         app:cardCornerRadius="20dp"
-        android:layout_margin="10dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true">
 
@@ -24,15 +23,15 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="220dp"
-                android:layout_height="219dp"
+                android:layout_width="219dp"
+                android:layout_height="192dp"
                 android:adjustViewBounds="true"
                 android:cropToPadding="false"
                 android:scaleType="fitXY"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@mipmap/dr21_foreground" />
+                app:layout_constraintBottom_toTopOf="@id/textView"/>
 
             <TextView
                 android:id="@+id/textView"

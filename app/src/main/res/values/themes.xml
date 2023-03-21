@@ -13,4 +13,13 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    
+    <style name="Widget.Bookli.Button.ElevatedButton" parent="Widget.Material3.Button.ElevatedButton">
+        <item name="shapeAppearance">@style/ShapeAppearance.Bookli.SmallComponent</item>
+    </style>
+
+    <style name="ShapeAppearance.Bookli.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">4dp</item>
+    </style>
 </resources>
