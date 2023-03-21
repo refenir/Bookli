@@ -70,13 +70,16 @@
             android:layout_alignParentEnd="true"
             android:layout_marginHorizontal="10dp"
             android:hint="@string/search_input"
+
             app:boxStrokeColor="?attr/colorPrimary"
             app:boxStrokeWidth="2dp"
             app:startIconDrawable="@drawable/baseline_search_24">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:inputType="text"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.recyclerview.widget.RecyclerView
