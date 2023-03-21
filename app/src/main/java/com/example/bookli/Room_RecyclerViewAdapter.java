@@ -1,6 +1,7 @@
 package com.example.bookli;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_RecyclerViewAdapter.MyViewHolder>{
 
@@ -20,6 +22,7 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
     ArrayList<RoomModel> roomModels;
     private final OnItemClickListener clickListener;
     RelativeLayout bookingView;
+    List<View> itemViewList;
     public Room_RecyclerViewAdapter(Context context, ArrayList<RoomModel> roomModels,
                                     OnItemClickListener clickListener, RelativeLayout bookingView){
         this.context = context;
@@ -33,6 +36,7 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
        // This is where you inflate the layout (Giving a look to the rows)
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recycler_view_item, parent, false);
+
         return new Room_RecyclerViewAdapter.MyViewHolder(view, clickListener, bookingView);
     }
 
@@ -59,25 +63,23 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
             roomName = itemView.findViewById(R.id.textView);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (clickListener != null) {
                         int pos = getAdapterPosition();
-
                         if (pos != RecyclerView.NO_POSITION){
-                            clickListener.onClick(myView, pos);
+                            clickListener.onClick(view, pos);
                         }
                     }
+
                 }
             });
         }
 
         @Override
         public void onClick(View view, int position) {
-
         }
-
-
     }
 }

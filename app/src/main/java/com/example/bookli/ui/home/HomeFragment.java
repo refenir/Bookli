@@ -34,6 +34,7 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
     int[] roomImages = {R.mipmap.dr21_foreground, R.mipmap.dr22_foreground, R.mipmap.dr23_foreground, R.mipmap.dr301_foreground};
     RelativeLayout bookingView;
     RelativeLayout rooms;
+    TextView roomName;
     boolean isUp;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -60,6 +61,7 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
 
         bookingView = view.findViewById(R.id.booking);
         rooms = view.findViewById(R.id.rooms);
+        roomName = view.findViewById(R.id.booking_room_name);
 
         // hide booking view initially
         bookingView.setVisibility(View.INVISIBLE);
@@ -68,54 +70,6 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
         bookingView.animate().setDuration(500);
         isUp = false;
 
-    }
-
-    // slide the view from below itself to the current position
-    public void slideUp(View view){
-        view.setVisibility(View.VISIBLE);
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                view.getHeight(),  // fromYDelta
-                0);                // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
-    }
-
-    public void slideUpRooms(View view){
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                0,  // fromYDelta
-                -250);                // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
-    }
-
-    // slide the view from its current position to below itself
-    public void slideDown(View view){
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                0,                 // fromYDelta
-                view.getHeight()); // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
-        view.setVisibility(View.INVISIBLE);
-    }
-
-    public void slideDownRooms(View view){
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                -250,                 // fromYDelta
-                0); // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
     }
 
     private void setUpRoomModels(){
@@ -135,16 +89,15 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
     @Override
     public void onClick(View view, int position) {
         if (isUp) {
-
             bookingView.animate().translationYBy(1000);
-//            slideDown(bookingView);
             rooms.animate().x(0).y(0);
         } else {
-//            slideUp(bookingView);
             bookingView.setVisibility(View.VISIBLE);
             bookingView.animate().translationYBy(-1000);
             rooms.animate().x(0).y(-250);
         }
         isUp = !isUp;
+
+        roomName.setText(roomModels.get(position).getRoomName());
     }
 }
