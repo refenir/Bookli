@@ -5,14 +5,18 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TimePicker;
 
 import com.example.bookli.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -23,6 +27,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookli.databinding.ActivityMainBinding;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.sidesheet.SideSheetDialog;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.sql.Time;
@@ -35,12 +41,11 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    EditText datePicker;
     EditText timePicker;
     public final String sharedPrefFile = "com.example.android.mainsharedprefs";
     public static final String KEY = "MyKey";
     SharedPreferences mPreferences;
-
+    SideSheetDialog sideSheetDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,38 +64,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        getSupportActionBar().hide();
-
-
-        // change date
-        datePicker = findViewById(R.id.edit_date);
-        Calendar calendar = Calendar.getInstance();
-        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                updateCalendar();
-            }
-
-            private void updateCalendar() {
-                String Format = "dd/MM/yy";
-                SimpleDateFormat sdf = new SimpleDateFormat(Format, Locale.US);
-
-                datePicker.setText(sdf.format(calendar.getTime()));
-            }
-        };
-
-        datePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new DatePickerDialog(MainActivity.this, date, calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
-
+        sideSheetDialog = new SideSheetDialog(MainActivity.this);
+        sideSheetDialog.setContentView(R.layout.side_sheet_content);
 
         // change time
 //        timePicker = findViewById(R.id.edit_time);
@@ -132,5 +107,23 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
         preferencesEditor.apply();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.top_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.side_sheet_toggle){
+            sideSheetDialog.show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

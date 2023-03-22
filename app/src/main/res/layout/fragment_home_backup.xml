@@ -6,334 +6,213 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <TextView
-        android:id="@+id/username"
+    <RelativeLayout
+        android:id="@+id/rooms"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:fontFamily="cursive"
-        android:text="Hi Janet"
-        android:textAlignment="textStart"
-        android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/upcomingMeetings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        app:cardBackgroundColor="@color/cardview_light_background"
-        app:cardMaxElevation="8dp"
-        app:cardPreventCornerOverlap="true"
-        app:contentPadding="10dp"
-        app:cardElevation="5dp"
-        app:cardCornerRadius="5dp"
-        app:layout_constraintTop_toBottomOf="@id/username"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/search"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="48dp">
-        
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/upcomingAppointments"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/upcoming_appointments"
-                android:layout_alignParentTop="true"
-                android:textStyle="italic"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
-            <TextView
-                android:id="@+id/appointment1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/upcomingAppointments"
-                android:text="Meow"/>
-
-            <TextView
-                android:id="@+id/appointment2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/appointment1"
-                android:text="Meow2"/>
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:hint="@string/search_input"
-        app:startIconDrawable="@drawable/baseline_search_24"
-        app:boxStrokeColor="?attr/colorPrimary"
-        app:boxStrokeWidth="2dp"
-        app:layout_constraintTop_toBottomOf="@id/upcomingMeetings"
-        app:layout_constraintEnd_toEndOf="parent">
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
-        style="@style/Widget.Material3.Button.TonalButton"
-        android:id="@+id/option1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Location"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search"
-        app:layout_constraintEnd_toStartOf="@id/option2"/>
-    <Button
-        style="@style/Widget.Material3.Button.TonalButton"
-        android:id="@+id/option2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Crowd Level"
-        app:layout_constraintTop_toBottomOf="@id/search"
-        app:layout_constraintStart_toEndOf="@id/option1"
-        app:layout_constraintEnd_toStartOf="@id/option3"/>
-    <Button
-        style="@style/Widget.Material3.Button.TonalButton"
-        android:id="@+id/option3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Capacity"
-        app:layout_constraintTop_toBottomOf="@id/search"
-        app:layout_constraintStart_toEndOf="@id/option2"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/option1"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <RelativeLayout
+        <TextView
+            android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/rooms">
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="10dp"
+            android:fontFamily="cursive"
+            android:text="Hi Janet"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/TextAppearance.Material3.DisplayMedium" />
 
-            <RelativeLayout
-                android:id="@+id/dr21"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <!--    <androidx.cardview.widget.CardView-->
+        <!--        android:id="@+id/upcomingMeetings"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_margin="5dp"-->
+        <!--        app:cardBackgroundColor="@color/cardview_light_background"-->
+        <!--        app:cardMaxElevation="8dp"-->
+        <!--        app:cardPreventCornerOverlap="true"-->
+        <!--        app:contentPadding="10dp"-->
+        <!--        app:cardElevation="5dp"-->
+        <!--        app:cardCornerRadius="5dp"-->
+        <!--        app:layout_constraintTop_toBottomOf="@id/username"-->
+        <!--        app:layout_constraintStart_toStartOf="parent"-->
+        <!--        app:layout_constraintEnd_toEndOf="parent"-->
+        <!--        app:layout_constraintBottom_toTopOf="@id/search"-->
+        <!--        tools:layout_editor_absoluteX="1dp"-->
+        <!--        tools:layout_editor_absoluteY="48dp">-->
+        <!--        -->
+        <!--        <RelativeLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent">-->
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_alignParentTop="true"
-                    android:id="@+id/dr21_card"
-                    app:cardBackgroundColor="@color/cardview_light_background"
-                    app:cardMaxElevation="10dp"
-                    app:cardPreventCornerOverlap="true"
-                    app:cardElevation="8dp"
-                    app:cardCornerRadius="10dp">
+        <!--            <TextView-->
+        <!--                android:id="@+id/upcomingAppointments"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:text="@string/upcoming_appointments"-->
+        <!--                android:layout_alignParentTop="true"-->
+        <!--                android:textStyle="italic"-->
+        <!--                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>-->
+        <!--        </RelativeLayout>-->
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+        <!--    </androidx.cardview.widget.CardView>-->
 
-                        <ImageView
-                            android:layout_width="200dp"
-                            android:layout_height="150dp"
-                            android:layout_gravity="start"
-                            android:src="@mipmap/dr21_foreground"
-                            android:id="@+id/room1"/>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/username"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginHorizontal="10dp"
+            android:hint="@string/search_input"
 
-                        <View
-                            android:layout_width="2dp"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentTop="true"
-                            android:layout_toEndOf="@id/room1"
-                            android:background="#B73B94DC"
-                            android:layout_marginVertical="10dp"/>
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:boxStrokeWidth="2dp"
+            app:startIconDrawable="@drawable/baseline_search_24">
 
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                </androidx.cardview.widget.CardView>
-
-                <TextView
-                    android:id="@+id/dr21_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/dr21_card"
-                    android:layout_marginStart="10dp"
-                    android:text="Discussion Room 2.1"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/dr21_text"
-                    android:layout_marginStart="10dp"
-                    android:text="@string/capacity_2"/>
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/dr21_card"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/book" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/dr22"
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/dr21">
+                android:maxLines="1"
+                android:inputType="text"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:id="@+id/dr22_card"
-                    app:cardBackgroundColor="@color/cardview_light_background"
-                    app:cardMaxElevation="10dp"
-                    app:cardPreventCornerOverlap="true"
-                    app:cardElevation="8dp"
-                    app:cardCornerRadius="10dp">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/room_carousel"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_below="@id/search"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="-2dp"
+            android:layout_marginTop="-129dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="130dp" />
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+    </RelativeLayout>
 
-                        <ImageView
-                            android:layout_width="200dp"
-                            android:layout_height="150dp"
-                            android:layout_gravity="start"
-                            android:src="@mipmap/dr22_foreground"
-                            android:id="@+id/room2"/>
 
-                        <View
-                            android:layout_width="2dp"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentTop="true"
-                            android:layout_toEndOf="@id/room2"
-                            android:background="#B73B94DC"
-                            android:layout_marginVertical="10dp"/>
+    <RelativeLayout
+        android:id="@+id/booking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#43694DDD"
+        android:paddingTop="5dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-                    </androidx.appcompat.widget.LinearLayoutCompat>
+        <TextView
+            android:id="@+id/booking_room_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            tools:text="Discussion Room"/>
 
-                </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:id="@+id/dr22_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/dr22_card"
-                    android:layout_marginStart="10dp"
-                    android:text="Discussion Room 2.2"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/dr22_text"
-                    android:layout_marginStart="10dp"
-                    android:text="@string/capacity_5"/>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_date_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_below="@id/booking_room_name"
+            android:hint="Date"
+            app:boxStrokeWidth="2dp"
+            app:startIconDrawable="@drawable/baseline_date_range_24">
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/dr22_card"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/book" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/dr23"
+            <EditText
+                android:id="@+id/edit_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/dr22">
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:id="@+id/card_3"
-                    app:cardBackgroundColor="@color/cardview_light_background"
-                    app:cardMaxElevation="10dp"
-                    app:cardPreventCornerOverlap="true"
-                    app:cardElevation="8dp"
-                    app:cardCornerRadius="10dp">
+        </com.google.android.material.textfield.TextInputLayout>
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
 
-                        <ImageView
-                            android:layout_width="200dp"
-                            android:layout_height="150dp"
-                            android:layout_gravity="start"
-                            android:src="@mipmap/dr23_foreground"
-                            android:id="@+id/room3"/>
+        <!--    <EditText-->
+        <!--        android:id="@+id/edit_time"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:hint="Select Time"-->
+        <!--        app:layout_constraintStart_toStartOf="parent"-->
+        <!--        app:layout_constraintEnd_toEndOf="parent"-->
+        <!--        app:layout_constraintTop_toBottomOf="@id/edit_date"-->
+        <!--        android:layout_margin="20dp"-->
+        <!--        android:clickable="false"-->
+        <!--        android:cursorVisible="false"-->
+        <!--        android:focusable="false"-->
+        <!--        android:focusableInTouchMode="false" />-->
 
-                        <View
-                            android:layout_width="2dp"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentTop="true"
-                            android:layout_toEndOf="@id/room3"
-                            android:background="#B73B94DC"
-                            android:layout_marginVertical="10dp"/>
+        <LinearLayout
+            android:id="@+id/edit_time_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_date_wrapper">
 
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-                </androidx.cardview.widget.CardView>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/dr301"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/from_time"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/dr23">
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:hint="From"
+                app:boxStrokeWidth="2dp">
 
-                <androidx.cardview.widget.CardView
+                <AutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:id="@+id/card_4"
-                    app:cardBackgroundColor="@color/cardview_light_background"
-                    app:cardMaxElevation="10dp"
-                    app:cardPreventCornerOverlap="true"
-                    app:cardElevation="8dp"
-                    app:cardCornerRadius="10dp">
+                    android:layout_weight="1"
+                    android:inputType="none"
+                    app:simpleItems="@array/times" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/to_time"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:hint="To"
+                app:boxStrokeWidth="2dp">
 
-                        <ImageView
-                            android:layout_width="200dp"
-                            android:layout_height="150dp"
-                            android:layout_gravity="start"
-                            android:src="@mipmap/dr301_foreground"
-                            android:id="@+id/room4"/>
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    app:simpleItems="@array/times" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                        <View
-                            android:layout_width="2dp"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentTop="true"
-                            android:layout_toEndOf="@id/room4"
-                            android:background="#B73B94DC"
-                            android:layout_marginVertical="10dp"/>
+        </LinearLayout>
 
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-                </androidx.cardview.widget.CardView>
-            </RelativeLayout>
+        <Button
+            style="@style/Widget.Bookli.Button.ElevatedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_time_wrapper"
+            android:layout_centerInParent="true"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:text="Book Now"
+            android:textSize="20sp" />
 
-        </RelativeLayout>
+    </RelativeLayout>
 
-
-    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
