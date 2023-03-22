@@ -88,15 +88,19 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
 
     @Override
     public void onClick(View view, int position) {
-        if (isUp) {
-            bookingView.animate().translationYBy(1000);
-            rooms.animate().x(0).y(0);
-        } else {
-            bookingView.setVisibility(View.VISIBLE);
+//        if (isUp) {
+//            bookingView.animate().translationYBy(1000);
+//            rooms.animate().x(0).y(0);
+//        } else {
+
+        bookingView.setVisibility(View.VISIBLE);
+        if (isUp == false) {
             bookingView.animate().translationYBy(-1000);
-            rooms.animate().x(0).y(-250);
+            isUp = true;
         }
-        isUp = !isUp;
+        rooms.animate().x(0).y(-250);
+//        }
+//        isUp = !isUp;
 
         roomName.setText(roomModels.get(position).getRoomName());
     }
