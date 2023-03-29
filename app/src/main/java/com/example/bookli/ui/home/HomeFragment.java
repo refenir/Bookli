@@ -57,6 +57,17 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
         bottomSheetDialog = new BottomSheetDialog(root.getContext());
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_content);
 
+        RecyclerView recyclerView = root.findViewById(R.id.room_carousel);
+
+        setUpRoomModels();
+
+        Room_RecyclerViewAdapter adapter = new Room_RecyclerViewAdapter( requireContext(), roomModels, this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+
+
+        rooms = root.findViewById(R.id.rooms);
+
         // change date
 //        datePicker = root.findViewById(R.id.edit_date);
 //        Calendar calendar = Calendar.getInstance();
@@ -90,16 +101,16 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        RecyclerView recyclerView = view.findViewById(R.id.room_carousel);
-
-        setUpRoomModels();
-
-        Room_RecyclerViewAdapter adapter = new Room_RecyclerViewAdapter( requireContext(), roomModels, this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
-
-
-        rooms = view.findViewById(R.id.rooms);
+//        RecyclerView recyclerView = view.findViewById(R.id.room_carousel);
+//
+//        setUpRoomModels();
+//
+//        Room_RecyclerViewAdapter adapter = new Room_RecyclerViewAdapter( requireContext(), roomModels, this);
+//        recyclerView.setAdapter(adapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+//
+//
+//        rooms = view.findViewById(R.id.rooms);
 
         // hide booking view initially
 //        rooms.animate().setDuration(500);
@@ -124,20 +135,7 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
     @Override
     public void onClick(View view, int position) {
         bottomSheetDialog.show();
-//        if (isUp) {
-//            bookingView.animate().translationYBy(1000);
-//            rooms.animate().x(0).y(0);
-//        } else {
 
-//        bookingView.setVisibility(View.VISIBLE);
-//        if (isUp == false) {
-//            bookingView.animate().translationYBy(-1000);
-//            isUp = true;
-//        }
-//        rooms.animate().x(0).y(-200);
-////        }
-////        isUp = !isUp;
-//
 //        roomName.setText(roomModels.get(position).getRoomName());
     }
 

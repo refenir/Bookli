@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/side_sheet_toggle"
-        android:icon="@drawable/baseline_meeting_room_24"
+        android:id="@+id/qr_toggle"
+        android:icon="@drawable/baseline_qr_code_scanner_24"
         android:title="Text to be seen by user"
         app:showAsAction="always"
         android:orderInCategory="0"/>
