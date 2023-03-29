@@ -24,11 +24,10 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
     RelativeLayout bookingView;
     List<View> itemViewList;
     public Room_RecyclerViewAdapter(Context context, ArrayList<RoomModel> roomModels,
-                                    OnItemClickListener clickListener, RelativeLayout bookingView){
+                                    OnItemClickListener clickListener){
         this.context = context;
         this.roomModels = roomModels;
         this.clickListener = clickListener;
-        this.bookingView = bookingView;
     }
     @NonNull
     @Override

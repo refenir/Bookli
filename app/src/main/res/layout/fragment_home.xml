@@ -14,19 +14,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="10dp"
-            android:fontFamily="cursive"
-            android:text="Hi Janet"
-            android:textAlignment="textStart"
-            android:textAppearance="@style/TextAppearance.Material3.DisplaySmall" />
-
         <!--    <androidx.cardview.widget.CardView-->
         <!--        android:id="@+id/upcomingMeetings"-->
         <!--        android:layout_width="match_parent"-->
@@ -65,10 +52,10 @@
             android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/username"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginHorizontal="10dp"
+            android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:hint="@string/search_input"
 
             app:boxStrokeColor="?attr/colorPrimary"
@@ -98,121 +85,121 @@
     </RelativeLayout>
 
 
-    <RelativeLayout
-        android:id="@+id/booking"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#43694DDD"
-        android:paddingTop="5dp"
-        android:paddingBottom="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+<!--    <RelativeLayout-->
+<!--        android:id="@+id/booking"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="#43694DDD"-->
+<!--        android:paddingTop="5dp"-->
+<!--        android:paddingBottom="10dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent">-->
 
-        <TextView
-            android:id="@+id/booking_room_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="5dp"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-            tools:text="Discussion Room"/>
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edit_date_wrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_below="@id/booking_room_name"
-            android:hint="Date"
-            app:boxStrokeWidth="2dp"
-            app:startIconDrawable="@drawable/baseline_date_range_24">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+<!--        <TextView-->
+<!--            android:id="@+id/booking_room_name"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginVertical="5dp"-->
+<!--            android:textAlignment="center"-->
+<!--            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"-->
+<!--            tools:text="Discussion Room"/>-->
 
 
-        <!--    <EditText-->
-        <!--        android:id="@+id/edit_time"-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:hint="Select Time"-->
-        <!--        app:layout_constraintStart_toStartOf="parent"-->
-        <!--        app:layout_constraintEnd_toEndOf="parent"-->
-        <!--        app:layout_constraintTop_toBottomOf="@id/edit_date"-->
-        <!--        android:layout_margin="20dp"-->
-        <!--        android:clickable="false"-->
-        <!--        android:cursorVisible="false"-->
-        <!--        android:focusable="false"-->
-        <!--        android:focusableInTouchMode="false" />-->
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/edit_date_wrapper"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginHorizontal="10dp"-->
+<!--            android:layout_below="@id/booking_room_name"-->
+<!--            android:hint="Date"-->
+<!--            app:boxStrokeWidth="2dp"-->
+<!--            app:startIconDrawable="@drawable/baseline_date_range_24">-->
 
-        <LinearLayout
-            android:id="@+id/edit_time_wrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/edit_date_wrapper">
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:id="@+id/edit_date"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:clickable="false"-->
+<!--                android:cursorVisible="false"-->
+<!--                android:focusable="false"-->
+<!--                android:focusableInTouchMode="false" />-->
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/from_time"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:hint="From"
-                app:boxStrokeWidth="2dp">
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
 
-                <AutoCompleteTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="none"
-                    app:simpleItems="@array/times" />
-            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/to_time"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:hint="To"
-                app:boxStrokeWidth="2dp">
+<!--        &lt;!&ndash;    <EditText&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:id="@+id/edit_time"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:layout_width="match_parent"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:hint="Select Time"&ndash;&gt;-->
+<!--        &lt;!&ndash;        app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+<!--        &lt;!&ndash;        app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+<!--        &lt;!&ndash;        app:layout_constraintTop_toBottomOf="@id/edit_date"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:layout_margin="20dp"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:clickable="false"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:cursorVisible="false"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:focusable="false"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:focusableInTouchMode="false" />&ndash;&gt;-->
 
-                <AutoCompleteTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"
-                    app:simpleItems="@array/times" />
-            </com.google.android.material.textfield.TextInputLayout>
+<!--        <LinearLayout-->
+<!--            android:id="@+id/edit_time_wrapper"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@id/edit_date_wrapper">-->
 
-        </LinearLayout>
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+<!--                android:id="@+id/from_time"-->
+<!--                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_marginEnd="5dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:hint="From"-->
+<!--                app:boxStrokeWidth="2dp">-->
 
-        <Button
-            style="@style/Widget.Bookli.Button.ElevatedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/edit_time_wrapper"
-            android:layout_centerInParent="true"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="10dp"
-            android:padding="10dp"
-            android:text="Book Now"
-            android:textSize="20sp" />
+<!--                <AutoCompleteTextView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:inputType="none"-->
+<!--                    app:simpleItems="@array/times" />-->
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
 
-    </RelativeLayout>
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+<!--                android:id="@+id/to_time"-->
+<!--                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="5dp"-->
+<!--                android:layout_marginEnd="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:hint="To"-->
+<!--                app:boxStrokeWidth="2dp">-->
+
+<!--                <AutoCompleteTextView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:inputType="none"-->
+<!--                    app:simpleItems="@array/times" />-->
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--        </LinearLayout>-->
+
+<!--        <Button-->
+<!--            style="@style/Widget.Bookli.Button.ElevatedButton"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@id/edit_time_wrapper"-->
+<!--            android:layout_centerInParent="true"-->
+<!--            android:layout_marginHorizontal="20dp"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:padding="10dp"-->
+<!--            android:text="Book Now"-->
+<!--            android:textSize="20sp" />-->
+
+<!--    </RelativeLayout>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

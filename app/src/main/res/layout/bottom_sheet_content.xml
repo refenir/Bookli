@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/booking_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:text="Discussion Room 2.1"
+        android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium" />
+
+    <LinearLayout
+        android:id="@+id/date_selection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/booking_title"
+        android:layout_centerInParent="true">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            style="@style/Widget.Material3.Button.IconButton"
+            app:icon="@drawable/baseline_arrow_left_24"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:text="Date" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.IconButton"
+            app:icon="@drawable/baseline_arrow_right_24"/>
+
+    </LinearLayout>
+    
+    <GridLayout
+        android:id="@+id/time_selection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:rowCount="4"
+        android:columnCount="4"
+        android:layout_below="@id/date_selection">
+
+        <Button
+            android:text="0900"
+            android:layout_gravity="center"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            style="@style/Widget.Material3.Button.TonalButton"/>
+        <Button
+            android:text="0900"
+            android:layout_gravity="center"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
+        <Button
+            android:text="0900"
+            android:layout_gravity="center"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
+        <Button
+            android:text="0900"
+            android:layout_gravity="center"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"/>
+
+
+    </GridLayout>
+
+    <Button
+        android:id="@+id/book_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/time_selection"
+        android:text="Book" />
+
+
+</RelativeLayout>

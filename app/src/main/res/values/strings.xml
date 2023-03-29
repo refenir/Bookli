@@ -9,6 +9,9 @@
     <string name="capacity_2">Capacity: 2</string>
     <string name="book">Book</string>
     <string name="capacity_5">Capacity: 5</string>
+    <string name="number_of_people">Number of people</string>
+    <string name="search">Search</string>
+    <string name="browse">Just browse</string>
     <string-array name="room_names">
         <item name="dr21">Discussion Room 2.1</item>
         <item name="dr22">Discussion Room 2.2</item>

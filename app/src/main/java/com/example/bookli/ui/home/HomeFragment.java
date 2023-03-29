@@ -24,6 +24,7 @@ import com.example.bookli.R;
 import com.example.bookli.RoomModel;
 import com.example.bookli.Room_RecyclerViewAdapter;
 import com.example.bookli.databinding.FragmentHomeBinding;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -37,12 +38,12 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
     private FragmentHomeBinding binding;
 
     ArrayList<RoomModel> roomModels = new ArrayList<>();
-    int[] roomImages = {R.mipmap.dr21_foreground, R.mipmap.dr22_foreground, R.mipmap.dr23_foreground, R.mipmap.dr301_foreground};
-    RelativeLayout bookingView;
+    int[] roomImages = {R.drawable.dr2_1, R.drawable.dr2_2, R.drawable.dr2_3, R.drawable.dr3_1};
     RelativeLayout rooms;
-    TextView roomName;
-    boolean isUp;
-    TextInputEditText datePicker;
+//    TextView roomName;
+//    boolean isUp;
+//    TextInputEditText datePicker;
+    BottomSheetDialog bottomSheetDialog;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -53,36 +54,37 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        bottomSheetDialog = new BottomSheetDialog(root.getContext());
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_content);
+
         // change date
-        datePicker = root.findViewById(R.id.edit_date);
-        Calendar calendar = Calendar.getInstance();
-        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                updateCalendar();
-            }
-
-            private void updateCalendar() {
-                String Format = "dd/MM/yy";
-                SimpleDateFormat sdf = new SimpleDateFormat(Format, Locale.US);
-
-                datePicker.setText(sdf.format(calendar.getTime()));
-            }
-        };
-
-        datePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new DatePickerDialog(requireContext(), date, calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
-
-
+//        datePicker = root.findViewById(R.id.edit_date);
+//        Calendar calendar = Calendar.getInstance();
+//        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+//            @Override
+//            public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+//                calendar.set(Calendar.YEAR, year);
+//                calendar.set(Calendar.MONTH, month);
+//                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+//
+//                updateCalendar();
+//            }
+//
+//            private void updateCalendar() {
+//                String Format = "dd/MM/yy";
+//                SimpleDateFormat sdf = new SimpleDateFormat(Format, Locale.US);
+//
+//                datePicker.setText(sdf.format(calendar.getTime()));
+//            }
+//        };
+//
+//        datePicker.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                new DatePickerDialog(requireContext(), date, calendar.get(Calendar.YEAR),
+//                        calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+//            }
+//        });
         return root;
     }
 
@@ -92,20 +94,16 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
 
         setUpRoomModels();
 
-        Room_RecyclerViewAdapter adapter = new Room_RecyclerViewAdapter( requireContext(), roomModels, this, bookingView);
+        Room_RecyclerViewAdapter adapter = new Room_RecyclerViewAdapter( requireContext(), roomModels, this);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, true));
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
 
-        bookingView = view.findViewById(R.id.booking);
+
         rooms = view.findViewById(R.id.rooms);
-        roomName = view.findViewById(R.id.booking_room_name);
 
         // hide booking view initially
-        bookingView.setVisibility(View.INVISIBLE);
-        bookingView.animate().translationYBy(1000);
-        rooms.animate().setDuration(500);
-        bookingView.animate().setDuration(500);
-        isUp = false;
+//        rooms.animate().setDuration(500);
+//        isUp = false;
 
     }
 
@@ -125,20 +123,23 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
 
     @Override
     public void onClick(View view, int position) {
+        bottomSheetDialog.show();
 //        if (isUp) {
 //            bookingView.animate().translationYBy(1000);
 //            rooms.animate().x(0).y(0);
 //        } else {
 
-        bookingView.setVisibility(View.VISIBLE);
-        if (isUp == false) {
-            bookingView.animate().translationYBy(-1000);
-            isUp = true;
-        }
-        rooms.animate().x(0).y(-200);
+//        bookingView.setVisibility(View.VISIBLE);
+//        if (isUp == false) {
+//            bookingView.animate().translationYBy(-1000);
+//            isUp = true;
 //        }
-//        isUp = !isUp;
-
-        roomName.setText(roomModels.get(position).getRoomName());
+//        rooms.animate().x(0).y(-200);
+////        }
+////        isUp = !isUp;
+//
+//        roomName.setText(roomModels.get(position).getRoomName());
     }
+
+
 }
