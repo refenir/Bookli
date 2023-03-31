@@ -1,12 +1,11 @@
 package com.example.bookli.ui.home;
 
-import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
-import android.widget.DatePicker;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,35 +14,40 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookli.MainActivity;
-import com.example.bookli.OnItemClickListener;
+import com.example.bookli.OnRoomClickListener;
+import com.example.bookli.OnTimeClickListener;
 import com.example.bookli.R;
-import com.example.bookli.RoomModel;
-import com.example.bookli.Room_RecyclerViewAdapter;
 import com.example.bookli.databinding.FragmentHomeBinding;
+import com.example.bookli.ui.booking_confirmation.BookingConfirmationActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
-public class HomeFragment extends Fragment implements OnItemClickListener {
+public class HomeFragment extends Fragment implements OnRoomClickListener, OnTimeClickListener {
 
     private FragmentHomeBinding binding;
 
     ArrayList<RoomModel> roomModels = new ArrayList<>();
+    ArrayList<TimeModel> timeModels = new ArrayList<>();
     int[] roomImages = {R.drawable.dr2_1, R.drawable.dr2_2, R.drawable.dr2_3, R.drawable.dr3_1};
     RelativeLayout rooms;
 //    TextView roomName;
 //    boolean isUp;
 //    TextInputEditText datePicker;
     BottomSheetDialog bottomSheetDialog;
+    TextView dateSelected;
+    Button bookButton;
+    RecyclerView timesRecyclerView;
+    Time_RecyclerViewAdapter timesAdapter;
+    Room_RecyclerViewAdapter roomsAdapter;
+    ArrayList<String> selectedTimes = new ArrayList<>();
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -57,16 +61,33 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
         bottomSheetDialog = new BottomSheetDialog(root.getContext());
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_content);
 
-        RecyclerView recyclerView = root.findViewById(R.id.room_carousel);
-
-        setUpRoomModels();
-
-        Room_RecyclerViewAdapter adapter = new Room_RecyclerViewAdapter( requireContext(), roomModels, this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
-
+        dateSelected = bottomSheetDialog.findViewById(R.id.date_selection);
+        String date = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(new Date());
+        dateSelected.setText(date);
 
         rooms = root.findViewById(R.id.rooms);
+
+        bookButton = bottomSheetDialog.findViewById(R.id.book_button);
+        bookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedTimes.clear();
+                String[] times = getResources().getStringArray(R.array.times);
+                ArrayList<Integer> selectedTimePositions = timesAdapter.getSelectedItemPosition();
+                for (int i = 0; i < selectedTimePositions.size(); i++){
+                    selectedTimes.add(times[selectedTimePositions.get(i)]);
+                }
+                TextView dateTextView = bottomSheetDialog.findViewById(R.id.date_selection);
+                String dateSelected = dateTextView.getText().toString();
+                TextView bookingTitle = bottomSheetDialog.findViewById(R.id.booking_title);
+                String roomName = bookingTitle.getText().toString();
+                Intent intent = new Intent(getActivity(), BookingConfirmationActivity.class);
+                intent.putExtra("selectedTimes", selectedTimes);
+                intent.putExtra("selectedRoom", roomName);
+                intent.putExtra("selectedDate", dateSelected);
+                startActivity(intent);
+            }
+        });
 
         // change date
 //        datePicker = root.findViewById(R.id.edit_date);
@@ -101,29 +122,43 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//        RecyclerView recyclerView = view.findViewById(R.id.room_carousel);
-//
-//        setUpRoomModels();
-//
-//        Room_RecyclerViewAdapter adapter = new Room_RecyclerViewAdapter( requireContext(), roomModels, this);
-//        recyclerView.setAdapter(adapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
-//
-//
-//        rooms = view.findViewById(R.id.rooms);
+        super.onViewCreated(view, savedInstanceState);
 
-        // hide booking view initially
-//        rooms.animate().setDuration(500);
-//        isUp = false;
+        // All the rooms
+        RecyclerView roomsRecyclerView = view.findViewById(R.id.room_recyclerview);
+        roomsRecyclerView.setHasFixedSize(true);
+        setUpRoomModels();
+        roomsAdapter = new Room_RecyclerViewAdapter( getContext(), roomModels, this);
+        roomsRecyclerView.setAdapter(roomsAdapter);
+        roomsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+
+        // All the times
+        timesRecyclerView = bottomSheetDialog.findViewById(R.id.time_recyclerview);
+        timesRecyclerView.setHasFixedSize(true);
+        setUpTimeModels();
+        timesAdapter = new Time_RecyclerViewAdapter(getContext(), timeModels, this);
+        timesRecyclerView.setAdapter(timesAdapter);
+        timesRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 4));
 
     }
 
     private void setUpRoomModels(){
         String[] roomNames = getResources().getStringArray(R.array.room_names);
-
-        for (int i=0; i<roomNames.length; i++) {
-            roomModels.add(new RoomModel(roomImages[i], roomNames[i]));
+        if (roomModels.size() == 0) {
+            for (int i=0; i<roomNames.length; i++) {
+                roomModels.add(new RoomModel(roomImages[i], roomNames[i]));
+            }
         }
+    }
+
+    private void setUpTimeModels(){
+        String[] times = getResources().getStringArray(R.array.times);
+        if (timeModels.size() == 0){
+            for (int i = 0; i < times.length; i++){
+                timeModels.add(new TimeModel(times[i]));
+            }
+        }
+
     }
 
     @Override
@@ -133,11 +168,13 @@ public class HomeFragment extends Fragment implements OnItemClickListener {
     }
 
     @Override
-    public void onClick(View view, int position) {
+    public void onRoomClick(View view, int position) {
         bottomSheetDialog.show();
-
-//        roomName.setText(roomModels.get(position).getRoomName());
+        TextView roomName = bottomSheetDialog.findViewById(R.id.booking_title);
+        roomName.setText(roomModels.get(position).getRoomName());
     }
 
-
+    @Override
+    public void onTimeClick(int position) {
+    }
 }

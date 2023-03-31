@@ -19,9 +19,19 @@
         <item name="dr32">Discussion Room 3.2</item>
     </string-array>
     <string-array name="times">
-        <item name="dr21">6.30</item>
-        <item name="dr22">7</item>
-        <item name="dr23">8</item>
-        <item name="dr32">9</item>
+        <item name="dr32">0800</item>
+        <item name="dr21">0900</item>
+        <item name="dr22">1000</item>
+        <item name="dr23">1100</item>
+        <item name="dr32">1200</item>
+        <item name="dr32">1300</item>
+        <item name="dr32">1400</item>
+        <item name="dr32">1500</item>
+        <item name="dr32">1600</item>
+        <item name="dr32">1700</item>
+        <item name="dr32">1800</item>
+        <item name="dr32">1900</item>
+        <item name="dr32">2000</item>
+        <item name="dr32">2100</item>
     </string-array>
 </resources>

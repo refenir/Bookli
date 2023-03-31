@@ -1,30 +1,28 @@
-package com.example.bookli;
+package com.example.bookli.ui.home;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bookli.OnRoomClickListener;
+import com.example.bookli.R;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_RecyclerViewAdapter.MyViewHolder>{
 
     Context context;
     ArrayList<RoomModel> roomModels;
-    private final OnItemClickListener clickListener;
-    RelativeLayout bookingView;
-    List<View> itemViewList;
+    private final OnRoomClickListener clickListener;
+
     public Room_RecyclerViewAdapter(Context context, ArrayList<RoomModel> roomModels,
-                                    OnItemClickListener clickListener){
+                                    OnRoomClickListener clickListener){
         this.context = context;
         this.roomModels = roomModels;
         this.clickListener = clickListener;
@@ -34,9 +32,9 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
     public Room_RecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
        // This is where you inflate the layout (Giving a look to the rows)
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.recycler_view_item, parent, false);
+        View view = inflater.inflate(R.layout.recycler_view_rooms, parent, false);
 
-        return new Room_RecyclerViewAdapter.MyViewHolder(view, clickListener, bookingView);
+        return new Room_RecyclerViewAdapter.MyViewHolder(view, clickListener);
     }
 
     @Override
@@ -52,13 +50,13 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
         return roomModels.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder implements OnItemClickListener{
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements OnRoomClickListener {
         // Grabbing views from recycler_view_row layout file
 
         ImageView imageView;
         TextView roomName;
 
-        public MyViewHolder(@NonNull View itemView, OnItemClickListener clickListener, View myView) {
+        public MyViewHolder(@NonNull View itemView, OnRoomClickListener clickListener) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
             roomName = itemView.findViewById(R.id.textView);
@@ -69,7 +67,7 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
                     if (clickListener != null) {
                         int pos = getAdapterPosition();
                         if (pos != RecyclerView.NO_POSITION){
-                            clickListener.onClick(view, pos);
+                            clickListener.onRoomClick(view, pos);
                         }
                     }
 
@@ -78,7 +76,7 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
         }
 
         @Override
-        public void onClick(View view, int position) {
+        public void onRoomClick(View view, int position) {
         }
     }
 }
