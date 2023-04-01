@@ -2,6 +2,7 @@ package com.example.bookli.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -47,7 +50,11 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     RecyclerView timesRecyclerView;
     Time_RecyclerViewAdapter timesAdapter;
     Room_RecyclerViewAdapter roomsAdapter;
-    ArrayList<String> selectedTimes = new ArrayList<>();
+    String[] selectedTimes;
+    Calendar c;
+    String formattedDate;
+    Button incrementDate;
+    Button reduceDate;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -61,9 +68,40 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         bottomSheetDialog = new BottomSheetDialog(root.getContext());
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_content);
 
+        // Set date in booking form
+        c = Calendar.getInstance();
         dateSelected = bottomSheetDialog.findViewById(R.id.date_selection);
-        String date = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(new Date());
-        dateSelected.setText(date);
+        SimpleDateFormat date = new SimpleDateFormat("dd-MMM-yyyy");
+        formattedDate = date.format(c.getTime());
+        dateSelected.setText(formattedDate);
+
+       //  Increment date
+        incrementDate = bottomSheetDialog.findViewById(R.id.increment_date);
+        incrementDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                c.add(Calendar.DATE, 1);
+                formattedDate = date.format(c.getTime());
+
+                Log.v("NEXT DATE: ", formattedDate);
+                dateSelected.setText(formattedDate);
+            }
+        });
+
+        // Reduce date
+        reduceDate = bottomSheetDialog.findViewById(R.id.decrease_date);
+        reduceDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                c.add(Calendar.DATE, -1);
+                formattedDate = date.format(c.getTime());
+
+                Log.v("PREV DATE:", formattedDate);
+                dateSelected.setText(formattedDate);
+            }
+        });
 
         rooms = root.findViewById(R.id.rooms);
 
@@ -71,11 +109,11 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         bookButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedTimes.clear();
                 String[] times = getResources().getStringArray(R.array.times);
                 ArrayList<Integer> selectedTimePositions = timesAdapter.getSelectedItemPosition();
+                selectedTimes = new String[selectedTimePositions.size()];
                 for (int i = 0; i < selectedTimePositions.size(); i++){
-                    selectedTimes.add(times[selectedTimePositions.get(i)]);
+                    selectedTimes[i] = times[selectedTimePositions.get(i)];
                 }
                 TextView dateTextView = bottomSheetDialog.findViewById(R.id.date_selection);
                 String dateSelected = dateTextView.getText().toString();

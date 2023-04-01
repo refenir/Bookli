@@ -11,12 +11,14 @@ import com.example.bookli.R;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class BookingConfirmationActivity extends AppCompatActivity {
 
     String roomName;
     TextView roomTextView;
-    ArrayList<String> selectedTimes = new ArrayList<>();
+    String[] selectedTimes = new String[14];
     String selectedDate;
     TextView timesTextView;
     TextView dateTextView;
@@ -28,15 +30,24 @@ public class BookingConfirmationActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             roomName = extras.getString("selectedRoom");
-            selectedTimes = extras.getStringArrayList("selectedTimes");
+            selectedTimes = extras.getStringArray("selectedTimes");
             selectedDate = extras.getString("selectedDate");
         }
+
+        Arrays.sort(selectedTimes, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return Integer.valueOf(o1).compareTo(Integer.valueOf(o2));
+            }
+        });
 
         roomTextView = findViewById(R.id.textView);
         roomTextView.setText("Room: " + roomName );
 
         timesTextView = findViewById(R.id.textView7);
-        timesTextView.setText("Time: " + selectedTimes);
+        timesTextView.setText("Time: " + Arrays.toString(selectedTimes)
+                .replace("[", "")
+                .replace("]", ""));
 
         dateTextView = findViewById(R.id.textView6);
         dateTextView.setText("Date: " + selectedDate);

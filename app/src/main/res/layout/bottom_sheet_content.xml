@@ -27,6 +27,7 @@
         android:layout_centerInParent="true">
 
         <Button
+            android:id="@+id/decrease_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -43,6 +44,7 @@
             android:text="Date" />
 
         <Button
+            android:id="@+id/increment_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Widget.Material3.Button.IconButton"
