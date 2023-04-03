@@ -37,6 +37,7 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 public class HomeFragment extends Fragment implements OnRoomClickListener, OnTimeClickListener {
 
@@ -144,7 +145,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
 
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        Toast.makeText(getContext(), "Response:" + jsonObject.toString(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getContext(), "Response:" + jsonObject.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -196,7 +197,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
 
             @Override
             public void onResponse(String endTime) {
-                Toast.makeText(getContext(), "Returned end time of:" + endTime, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "Returned end time of:" + endTime, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -237,9 +238,18 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
             public void onResponse(List<BookingsModel> bookings) {
                 setOfBookedTimings.clear();
                 for (int i = 0; i < bookings.size(); i++){
-                    setOfBookedTimings.add(bookings.get(i).getEndTime());
+                    String endTime = bookings.get(i).getEndTime();
+                    String startTime = bookings.get(i).getStartTime();
+                    int[] range = IntStream.rangeClosed(Integer.parseInt(startTime.substring(0,2)),
+                            Integer.parseInt(endTime.substring(0,2))).toArray();
+                    for (int j = 0; j < range.length; j++) {
+                        String time;
+                        if (range[j] < 10) time = "0" + range[j] + ":00:00";
+                        else time = range[j] + ":00:00";
+                        setOfBookedTimings.add(time);
+                    }
                 }
-                Toast.makeText(getContext(), bookings.toString(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), bookings.toString(), Toast.LENGTH_SHORT).show();
                 setUpTimeModels();
                 timesAdapter.notifyDataSetChanged();
             }
