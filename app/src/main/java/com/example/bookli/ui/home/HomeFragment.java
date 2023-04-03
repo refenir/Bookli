@@ -6,9 +6,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -19,6 +21,16 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.bookli.BookingDataService;
+import com.example.bookli.BookingsModel;
+import com.example.bookli.MySingleton;
 import com.example.bookli.OnRoomClickListener;
 import com.example.bookli.OnTimeClickListener;
 import com.example.bookli.R;
@@ -26,12 +38,19 @@ import com.example.bookli.databinding.FragmentHomeBinding;
 import com.example.bookli.ui.booking_confirmation.BookingConfirmationActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class HomeFragment extends Fragment implements OnRoomClickListener, OnTimeClickListener {
 
@@ -55,12 +74,16 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     String formattedDate;
     Button incrementDate;
     Button reduceDate;
+    Set<String> setOfBookedTimings = new HashSet<>();
+    BookingDataService bookingDataService;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
+
+        bookingDataService = new BookingDataService(getContext());
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -71,7 +94,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         // Set date in booking form
         c = Calendar.getInstance();
         dateSelected = bottomSheetDialog.findViewById(R.id.date_selection);
-        SimpleDateFormat date = new SimpleDateFormat("dd-MMM-yyyy");
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
         formattedDate = date.format(c.getTime());
         dateSelected.setText(formattedDate);
 
@@ -80,12 +103,14 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         incrementDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                setOfBookedTimings = new HashSet<>();
                 c.add(Calendar.DATE, 1);
                 formattedDate = date.format(c.getTime());
 
                 Log.v("NEXT DATE: ", formattedDate);
                 dateSelected.setText(formattedDate);
+
+                setTimeButtons(formattedDate);
             }
         });
 
@@ -94,12 +119,14 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         reduceDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                setOfBookedTimings = new HashSet<>();
                 c.add(Calendar.DATE, -1);
                 formattedDate = date.format(c.getTime());
 
                 Log.v("PREV DATE:", formattedDate);
                 dateSelected.setText(formattedDate);
+
+                setTimeButtons(formattedDate);
             }
         });
 
@@ -109,6 +136,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         bookButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String[] times = getResources().getStringArray(R.array.times);
                 ArrayList<Integer> selectedTimePositions = timesAdapter.getSelectedItemPosition();
                 selectedTimes = new String[selectedTimePositions.size()];
@@ -119,6 +147,21 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
                 String dateSelected = dateTextView.getText().toString();
                 TextView bookingTitle = bottomSheetDialog.findViewById(R.id.booking_title);
                 String roomName = bookingTitle.getText().toString();
+
+                // update backend
+                bookingDataService.makeBooking(dateSelected, selectedTimes[0], selectedTimes[selectedTimes.length-1], 3, 1006876, new BookingDataService.MakeBookingResponseListener() {
+                    @Override
+                    public void onError(String msg) {
+                        Toast.makeText(getContext(), msg.toString(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        Toast.makeText(getContext(), "Response:" + jsonObject.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                // pass data to the next screen
                 Intent intent = new Intent(getActivity(), BookingConfirmationActivity.class);
                 intent.putExtra("selectedTimes", selectedTimes);
                 intent.putExtra("selectedRoom", roomName);
@@ -155,6 +198,20 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
 //                        calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
 //            }
 //        });
+
+        // Get all booking today
+        bookingDataService.getEndTime(new BookingDataService.VolleyResponseListener() {
+            @Override
+            public void onError(String msg) {
+                Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onResponse(String endTime) {
+                Toast.makeText(getContext(), "Returned end time of:" + endTime, Toast.LENGTH_LONG).show();
+            }
+        });
+
         return root;
     }
 
@@ -173,29 +230,76 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         // All the times
         timesRecyclerView = bottomSheetDialog.findViewById(R.id.time_recyclerview);
         timesRecyclerView.setHasFixedSize(true);
-        setUpTimeModels();
-        timesAdapter = new Time_RecyclerViewAdapter(getContext(), timeModels, this);
-        timesRecyclerView.setAdapter(timesAdapter);
-        timesRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 4));
+        setTimeButtons();
+
+    }
+
+    private void setTimeButtons(String date){
+        bookingDataService.getBookedTimesByDate(date, new BookingDataService.BookingResponseListener() {
+            @Override
+            public void onError(String msg) {
+                Toast.makeText(getContext(), "smth wrong", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onResponse(List<BookingsModel> bookings) {
+                for (int i = 0; i < bookings.size(); i++){
+                    setOfBookedTimings.add(bookings.get(i).getEndTime());
+                }
+                Toast.makeText(getContext(), setOfBookedTimings.toString(), Toast.LENGTH_SHORT).show();
+                setUpTimeModels();
+                timesAdapter = new Time_RecyclerViewAdapter(getContext(), timeModels);
+                timesRecyclerView.setAdapter(timesAdapter);
+                timesRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 4));
+            }
+        });
+    }
+
+    private void setTimeButtons(){
+        setOfBookedTimings.clear();
+        bookingDataService.getBookedTimesByDate(dateSelected.getText().toString(), new BookingDataService.BookingResponseListener() {
+            @Override
+            public void onError(String msg) {
+                Toast.makeText(getContext(), "smth wrong", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onResponse(List<BookingsModel> bookings) {
+                for (int i = 0; i < bookings.size(); i++){
+                    setOfBookedTimings.add(bookings.get(i).getEndTime());
+                }
+                Toast.makeText(getContext(), setOfBookedTimings.toString(), Toast.LENGTH_SHORT).show();
+                setUpTimeModels();
+                timesAdapter = new Time_RecyclerViewAdapter(getContext(), timeModels);
+                timesRecyclerView.setAdapter(timesAdapter);
+                timesRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 4));
+            }
+        });
 
     }
 
     private void setUpRoomModels(){
+        roomModels.clear();
         String[] roomNames = getResources().getStringArray(R.array.room_names);
-        if (roomModels.size() == 0) {
-            for (int i=0; i<roomNames.length; i++) {
-                roomModels.add(new RoomModel(roomImages[i], roomNames[i]));
-            }
+
+        for (int i=0; i<roomNames.length; i++) {
+            roomModels.add(new RoomModel(roomImages[i], roomNames[i]));
         }
     }
 
     private void setUpTimeModels(){
+        timeModels.clear();
         String[] times = getResources().getStringArray(R.array.times);
-        if (timeModels.size() == 0){
-            for (int i = 0; i < times.length; i++){
+
+        for (int i = 0; i < times.length; i++){
+            String formattedTime = times[i].substring(0,2) + ":" + times[i].substring(2) + ":00";
+            if (setOfBookedTimings.contains(formattedTime)) {
+                timeModels.add(new TimeModel(times[i], false));
+            } else{
                 timeModels.add(new TimeModel(times[i]));
             }
         }
+
 
     }
 

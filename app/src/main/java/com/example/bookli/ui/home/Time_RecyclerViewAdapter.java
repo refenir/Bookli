@@ -19,12 +19,10 @@ import java.util.ArrayList;
 public class Time_RecyclerViewAdapter extends RecyclerView.Adapter<Time_RecyclerViewAdapter.MyViewHolder> {
     Context context;
     ArrayList<TimeModel> timeModels;
-    private final OnTimeClickListener clickListener;
     private ArrayList<Integer> selectedItemPosition = new ArrayList<>();
-    public Time_RecyclerViewAdapter(Context context, ArrayList<TimeModel> timeModels, OnTimeClickListener clickListener){
+    public Time_RecyclerViewAdapter(Context context, ArrayList<TimeModel> timeModels){
         this.context = context;
         this.timeModels = timeModels;
-        this.clickListener = clickListener;
     }
 
     public ArrayList<Integer> getSelectedItemPosition(){
@@ -42,18 +40,19 @@ public class Time_RecyclerViewAdapter extends RecyclerView.Adapter<Time_Recycler
     @Override
     public void onBindViewHolder(@NonNull Time_RecyclerViewAdapter.MyViewHolder holder, int position) {
         holder.timeButton.setText(timeModels.get(position).getTime());
+        holder.timeButton.setEnabled(timeModels.get(position).getAvailability());
 
         holder.timeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (selectedItemPosition.contains(holder.getAdapterPosition())) selectedItemPosition.remove(Integer.valueOf(holder.getAdapterPosition()));
                 else selectedItemPosition.add(holder.getAdapterPosition());
-                notifyDataSetChanged();
+                notifyItemChanged(holder.getAdapterPosition());
             }
         });
 
         if (selectedItemPosition.contains(holder.getAdapterPosition())) {
-            holder.timeButton.setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_secondary, null));
+            holder.timeButton.setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_secondaryContainer, null));
         } else {
             holder.timeButton.setBackgroundColor(holder.timeButton.getContext().getColor(R.color.md_theme_light_primary));
         }
@@ -64,16 +63,12 @@ public class Time_RecyclerViewAdapter extends RecyclerView.Adapter<Time_Recycler
         return timeModels.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements OnTimeClickListener{
+    public class MyViewHolder extends RecyclerView.ViewHolder{
         Button timeButton;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             timeButton = itemView.findViewById(R.id.time_button);
         }
 
-        @Override
-        public void onTimeClick(int position) {
-
-        }
     }
 }
