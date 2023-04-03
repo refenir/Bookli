@@ -78,9 +78,8 @@ public class BookingDataService {
             @Override
             public void onResponse(JSONArray response) {
                 try{
-                    BookingsModel one_booking = new BookingsModel();
-
                     for (int i = 0; i < response.length(); i++) {
+                        BookingsModel one_booking = new BookingsModel();
                         JSONObject booking = response.getJSONObject(i);
                         one_booking.setDate(booking.getString("date"));
                         one_booking.setEndTime(booking.getString("endTime"));

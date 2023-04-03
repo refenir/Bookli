@@ -60,7 +60,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     String formattedDate;
     Button incrementDate;
     Button reduceDate;
-    Set<String> setOfBookedTimings = new HashSet<>();
+    Set<String> setOfBookedTimings;
     BookingDataService bookingDataService;
     int selectedRoomImage;
     int selectedRoomPosition;
@@ -68,6 +68,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        setOfBookedTimings = new HashSet<String>();
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
@@ -225,7 +226,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     }
 
     private void setTimeButtons(String date, int roomPosition){
-        setOfBookedTimings.clear();
+
         bookingDataService.getBookedTimesByDateByRoom(date, roomPosition, new BookingDataService.BookingResponseListener() {
             @Override
             public void onError(String msg) {
@@ -234,10 +235,11 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
 
             @Override
             public void onResponse(List<BookingsModel> bookings) {
+                setOfBookedTimings.clear();
                 for (int i = 0; i < bookings.size(); i++){
                     setOfBookedTimings.add(bookings.get(i).getEndTime());
                 }
-                Toast.makeText(getContext(), setOfBookedTimings.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), bookings.toString(), Toast.LENGTH_SHORT).show();
                 setUpTimeModels();
                 timesAdapter.notifyDataSetChanged();
             }
@@ -280,8 +282,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         super.onPause();
         Log.v("onPaused", "paused");
         timesAdapter.clearSelectedItemPosition();
-        setUpTimeModels();
-        timesAdapter.notifyDataSetChanged();
+        setTimeButtons(dateSelected.getText().toString(), selectedRoomPosition);
     }
 
     @Override
