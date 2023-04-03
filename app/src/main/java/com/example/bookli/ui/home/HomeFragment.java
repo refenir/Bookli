@@ -76,6 +76,8 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     Button reduceDate;
     Set<String> setOfBookedTimings = new HashSet<>();
     BookingDataService bookingDataService;
+    int selectedRoomImage;
+    int selectedRoomPosition;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -149,7 +151,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
                 String roomName = bookingTitle.getText().toString();
 
                 // update backend
-                bookingDataService.makeBooking(dateSelected, selectedTimes[0], selectedTimes[selectedTimes.length-1], 3, 1006876, new BookingDataService.MakeBookingResponseListener() {
+                bookingDataService.makeBooking(dateSelected, selectedTimes[0], selectedTimes[selectedTimes.length-1], selectedRoomPosition, 1006876, new BookingDataService.MakeBookingResponseListener() {
                     @Override
                     public void onError(String msg) {
                         Toast.makeText(getContext(), msg.toString(), Toast.LENGTH_SHORT).show();
@@ -166,6 +168,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
                 intent.putExtra("selectedTimes", selectedTimes);
                 intent.putExtra("selectedRoom", roomName);
                 intent.putExtra("selectedDate", dateSelected);
+                intent.putExtra("image", selectedRoomImage);
                 startActivity(intent);
             }
         });
@@ -203,12 +206,12 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         bookingDataService.getEndTime(new BookingDataService.VolleyResponseListener() {
             @Override
             public void onError(String msg) {
-                Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onResponse(String endTime) {
-                Toast.makeText(getContext(), "Returned end time of:" + endTime, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Returned end time of:" + endTime, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -230,15 +233,18 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         // All the times
         timesRecyclerView = bottomSheetDialog.findViewById(R.id.time_recyclerview);
         timesRecyclerView.setHasFixedSize(true);
-        setTimeButtons();
+        setUpTimeModels();
+        timesAdapter = new Time_RecyclerViewAdapter(getContext(), timeModels);
+        timesRecyclerView.setAdapter(timesAdapter);
+        timesRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 4));
 
     }
 
     private void setTimeButtons(String date){
-        bookingDataService.getBookedTimesByDate(date, new BookingDataService.BookingResponseListener() {
+        bookingDataService.getBookedTimesByDateByRoom(date, selectedRoomPosition, new BookingDataService.BookingResponseListener() {
             @Override
             public void onError(String msg) {
-                Toast.makeText(getContext(), "smth wrong", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "smth wrong", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -248,34 +254,9 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
                 }
                 Toast.makeText(getContext(), setOfBookedTimings.toString(), Toast.LENGTH_SHORT).show();
                 setUpTimeModels();
-                timesAdapter = new Time_RecyclerViewAdapter(getContext(), timeModels);
-                timesRecyclerView.setAdapter(timesAdapter);
-                timesRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 4));
+                timesAdapter.notifyDataSetChanged();
             }
         });
-    }
-
-    private void setTimeButtons(){
-        setOfBookedTimings.clear();
-        bookingDataService.getBookedTimesByDate(dateSelected.getText().toString(), new BookingDataService.BookingResponseListener() {
-            @Override
-            public void onError(String msg) {
-                Toast.makeText(getContext(), "smth wrong", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onResponse(List<BookingsModel> bookings) {
-                for (int i = 0; i < bookings.size(); i++){
-                    setOfBookedTimings.add(bookings.get(i).getEndTime());
-                }
-                Toast.makeText(getContext(), setOfBookedTimings.toString(), Toast.LENGTH_SHORT).show();
-                setUpTimeModels();
-                timesAdapter = new Time_RecyclerViewAdapter(getContext(), timeModels);
-                timesRecyclerView.setAdapter(timesAdapter);
-                timesRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 4));
-            }
-        });
-
     }
 
     private void setUpRoomModels(){
@@ -314,6 +295,10 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         bottomSheetDialog.show();
         TextView roomName = bottomSheetDialog.findViewById(R.id.booking_title);
         roomName.setText(roomModels.get(position).getRoomName());
+        selectedRoomImage = roomModels.get(position).getImage();
+        selectedRoomPosition = position;
+        setTimeButtons(dateSelected.getText().toString());
+        timesAdapter.notifyDataSetChanged();
     }
 
     @Override

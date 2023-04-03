@@ -70,8 +70,8 @@ public class BookingDataService {
         void onResponse(List<BookingsModel> bookings);
     }
 
-    public void getBookedTimesByDate(String date, BookingResponseListener bookingResponseListener){
-        String url = QUERY_FOR_BOOKINGS + "startDate=" + date + "&endDate=" + date;
+    public void getBookedTimesByDateByRoom(String date, int roomId, BookingResponseListener bookingResponseListener){
+        String url = QUERY_FOR_BOOKINGS + "startDate=" + date + "&endDate=" + date + "&rooms=" + roomId;
         List<BookingsModel> bookings = new ArrayList<>();
         // get json object
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {

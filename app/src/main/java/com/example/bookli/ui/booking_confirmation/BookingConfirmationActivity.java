@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.bookli.R;
@@ -22,6 +23,8 @@ public class BookingConfirmationActivity extends AppCompatActivity {
     String selectedDate;
     TextView timesTextView;
     TextView dateTextView;
+    ImageView imageView;
+    int roomImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class BookingConfirmationActivity extends AppCompatActivity {
             roomName = extras.getString("selectedRoom");
             selectedTimes = extras.getStringArray("selectedTimes");
             selectedDate = extras.getString("selectedDate");
+            roomImage = extras.getInt("image");
         }
 
         Arrays.sort(selectedTimes, new Comparator<String>() {
@@ -51,5 +55,8 @@ public class BookingConfirmationActivity extends AppCompatActivity {
 
         dateTextView = findViewById(R.id.textView6);
         dateTextView.setText("Date: " + selectedDate);
+
+        imageView = findViewById(R.id.imageView);
+        imageView.setImageResource(roomImage);
     }
 }
