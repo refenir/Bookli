@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,16 +20,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.bookli.BookingDataService;
 import com.example.bookli.BookingsModel;
-import com.example.bookli.MySingleton;
 import com.example.bookli.OnRoomClickListener;
 import com.example.bookli.OnTimeClickListener;
 import com.example.bookli.R;
@@ -38,18 +29,13 @@ import com.example.bookli.databinding.FragmentHomeBinding;
 import com.example.bookli.ui.booking_confirmation.BookingConfirmationActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 public class HomeFragment extends Fragment implements OnRoomClickListener, OnTimeClickListener {
@@ -105,14 +91,13 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         incrementDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setOfBookedTimings = new HashSet<>();
                 c.add(Calendar.DATE, 1);
                 formattedDate = date.format(c.getTime());
 
                 Log.v("NEXT DATE: ", formattedDate);
                 dateSelected.setText(formattedDate);
 
-                setTimeButtons(formattedDate);
+                setTimeButtons(formattedDate, selectedRoomPosition);
             }
         });
 
@@ -121,14 +106,13 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         reduceDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setOfBookedTimings = new HashSet<>();
                 c.add(Calendar.DATE, -1);
                 formattedDate = date.format(c.getTime());
 
                 Log.v("PREV DATE:", formattedDate);
                 dateSelected.setText(formattedDate);
 
-                setTimeButtons(formattedDate);
+                setTimeButtons(formattedDate,selectedRoomPosition);
             }
         });
 
@@ -240,8 +224,9 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
 
     }
 
-    private void setTimeButtons(String date){
-        bookingDataService.getBookedTimesByDateByRoom(date, selectedRoomPosition, new BookingDataService.BookingResponseListener() {
+    private void setTimeButtons(String date, int roomPosition){
+        setOfBookedTimings.clear();
+        bookingDataService.getBookedTimesByDateByRoom(date, roomPosition, new BookingDataService.BookingResponseListener() {
             @Override
             public void onError(String msg) {
                 Toast.makeText(getContext(), "smth wrong", Toast.LENGTH_SHORT).show();
@@ -291,13 +276,22 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        Log.v("onPaused", "paused");
+        timesAdapter.clearSelectedItemPosition();
+        setUpTimeModels();
+        timesAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onRoomClick(View view, int position) {
         bottomSheetDialog.show();
         TextView roomName = bottomSheetDialog.findViewById(R.id.booking_title);
         roomName.setText(roomModels.get(position).getRoomName());
         selectedRoomImage = roomModels.get(position).getImage();
         selectedRoomPosition = position;
-        setTimeButtons(dateSelected.getText().toString());
+        setTimeButtons(dateSelected.getText().toString(), selectedRoomPosition);
         timesAdapter.notifyDataSetChanged();
     }
 

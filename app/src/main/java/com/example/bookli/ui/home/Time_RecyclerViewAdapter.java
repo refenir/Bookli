@@ -1,8 +1,6 @@
 package com.example.bookli.ui.home;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +9,6 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookli.OnTimeClickListener;
 import com.example.bookli.R;
 
 import java.util.ArrayList;
@@ -28,6 +25,7 @@ public class Time_RecyclerViewAdapter extends RecyclerView.Adapter<Time_Recycler
     public ArrayList<Integer> getSelectedItemPosition(){
         return selectedItemPosition;
     }
+    public void clearSelectedItemPosition() { selectedItemPosition.clear(); }
 
     @NonNull
     @Override
