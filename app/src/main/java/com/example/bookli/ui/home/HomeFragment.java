@@ -288,9 +288,8 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        Log.v("onPaused", "paused");
+    public void onResume() {
+        super.onResume();
         timesAdapter.clearSelectedItemPosition();
         setTimeButtons(dateSelected.getText().toString(), selectedRoomPosition);
     }
