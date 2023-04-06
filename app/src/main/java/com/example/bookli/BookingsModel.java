@@ -6,6 +6,7 @@ public class BookingsModel {
     String endTime;
     int studentId;
     int roomId;
+    int bookingId;
 
     public BookingsModel(){
     }
@@ -56,4 +57,10 @@ public class BookingsModel {
     public void setRoomId(int roomId) {
         this.roomId = roomId;
     }
+
+    public int getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(int booking) {this.bookingId = bookingId;}
 }

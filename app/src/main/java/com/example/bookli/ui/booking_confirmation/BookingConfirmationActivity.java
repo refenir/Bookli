@@ -2,11 +2,17 @@ package com.example.bookli.ui.booking_confirmation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.bookli.BookingDataService;
+import com.example.bookli.MainActivity;
 import com.example.bookli.R;
 
 import org.w3c.dom.Text;
@@ -25,10 +31,14 @@ public class BookingConfirmationActivity extends AppCompatActivity {
     TextView dateTextView;
     ImageView imageView;
     int roomImage;
+    int bookingId;
+    Button delete;
+    BookingDataService bookingDataService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bookingDataService = new BookingDataService(this);
         setContentView(R.layout.activity_booking_confirmation);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -36,6 +46,7 @@ public class BookingConfirmationActivity extends AppCompatActivity {
             selectedTimes = extras.getStringArray("selectedTimes");
             selectedDate = extras.getString("selectedDate");
             roomImage = extras.getInt("image");
+            bookingId = extras.getInt("bookingId");
         }
 
         Arrays.sort(selectedTimes, new Comparator<String>() {
@@ -58,5 +69,25 @@ public class BookingConfirmationActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageView);
         imageView.setImageResource(roomImage);
+
+        delete = findViewById(R.id.delete_button);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bookingDataService.deleteBooking(bookingId, new BookingDataService.DeleteBookingResponseListener() {
+                    @Override
+                    public void onError(String msg) {
+                        Toast.makeText(BookingConfirmationActivity.this, "delete failed", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onResponse() {
+                        Toast.makeText(BookingConfirmationActivity.this, "delete successful", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
     }
 }

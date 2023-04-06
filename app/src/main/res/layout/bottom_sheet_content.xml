@@ -68,5 +68,4 @@
         android:layout_below="@id/time_recyclerview"
         android:text="Book" />
 
-
 </RelativeLayout>
