@@ -11,19 +11,26 @@
         <item name="dr32">Discussion Room 3.2</item>
     </string-array>
     <string-array name="times">
-        <item name="dr32">0800</item>
-        <item name="dr21">0900</item>
-        <item name="dr22">1000</item>
-        <item name="dr23">1100</item>
-        <item name="dr32">1200</item>
-        <item name="dr32">1300</item>
-        <item name="dr32">1400</item>
-        <item name="dr32">1500</item>
-        <item name="dr32">1600</item>
-        <item name="dr32">1700</item>
-        <item name="dr32">1800</item>
-        <item name="dr32">1900</item>
-        <item name="dr32">2000</item>
-        <item name="dr32">2100</item>
+        <item name="0800">0800</item>
+        <item name="0900">0900</item>
+        <item name="1000">1000</item>
+        <item name="1100">1100</item>
+        <item name="1200">1200</item>
+        <item name="1300">1300</item>
+        <item name="1400">1400</item>
+        <item name="1500">1500</item>
+        <item name="1600">1600</item>
+        <item name="1700">1700</item>
+        <item name="1800">1800</item>
+        <item name="1900">1900</item>
+        <item name="2000">2000</item>
+        <item name="2100">2100</item>
     </string-array>
+    <string-array name="capacities">
+        <item name="cap_dr21">2</item>
+        <item name="cap_dr22">5</item>
+        <item name="cap_dr23">5</item>
+        <item name="cap_dr32">8</item>
+    </string-array>
+    <string name="capacity">Capacity: %1$d</string>
 </resources>

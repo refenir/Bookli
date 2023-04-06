@@ -174,7 +174,6 @@ public class BookingDataService {
                 Log.d("VOLLEY", "delete failed");
             }
         });
-
         MySingleton.getInstance(context).addToRequestQueue(jsonObject);
     }
 }

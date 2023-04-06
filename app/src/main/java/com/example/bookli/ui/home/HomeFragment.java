@@ -46,6 +46,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     ArrayList<RoomModel> roomModels = new ArrayList<>();
     ArrayList<TimeModel> timeModels = new ArrayList<>();
     int[] roomImages = {R.drawable.dr2_1, R.drawable.dr2_2, R.drawable.dr2_3, R.drawable.dr3_1};
+    int[] capacities = {2, 5, 5, 8};
     RelativeLayout rooms;
 
     BottomSheetDialog bottomSheetDialog;
@@ -102,6 +103,8 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
                 dateSelected.setText(formattedDate);
 
                 setTimeButtons(formattedDate, selectedRoomPosition);
+
+                timesAdapter.clearSelectedItemPosition();
             }
         });
 
@@ -118,6 +121,8 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
                 dateSelected.setText(formattedDate);
 
                 setTimeButtons(formattedDate,selectedRoomPosition);
+
+                timesAdapter.clearSelectedItemPosition();
             }
         });
 
@@ -253,7 +258,9 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         String[] roomNames = getResources().getStringArray(R.array.room_names);
 
         for (int i=0; i<roomNames.length; i++) {
-            roomModels.add(new RoomModel(roomImages[i], roomNames[i]));
+
+            roomModels.add(new RoomModel(roomImages[i], roomNames[i],
+                    String.format(getResources().getString(R.string.capacity), capacities[i])));
         }
     }
 

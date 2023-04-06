@@ -43,6 +43,7 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
         // based on position of the recyclerview
         holder.roomName.setText(roomModels.get(position).getRoomName());
         holder.imageView.setImageResource(roomModels.get(position).getImage());
+        holder.capacity.setText(roomModels.get(position).getCapacity());
     }
 
     @Override
@@ -55,11 +56,13 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
 
         ImageView imageView;
         TextView roomName;
+        TextView capacity;
 
         public MyViewHolder(@NonNull View itemView, OnRoomClickListener clickListener) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
-            roomName = itemView.findViewById(R.id.textView);
+            roomName = itemView.findViewById(R.id.roomName);
+            capacity = itemView.findViewById(R.id.capacity);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

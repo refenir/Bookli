@@ -1,6 +1,8 @@
 package com.example.bookli.ui.home;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,21 +41,19 @@ public class Time_RecyclerViewAdapter extends RecyclerView.Adapter<Time_Recycler
     public void onBindViewHolder(@NonNull Time_RecyclerViewAdapter.MyViewHolder holder, int position) {
         holder.timeButton.setText(timeModels.get(position).getTime());
         holder.timeButton.setEnabled(timeModels.get(position).getAvailability());
-
         holder.timeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (selectedItemPosition.contains(holder.getAdapterPosition())) selectedItemPosition.remove(Integer.valueOf(holder.getAdapterPosition()));
-                else selectedItemPosition.add(holder.getAdapterPosition());
-                notifyItemChanged(holder.getAdapterPosition());
+                if (selectedItemPosition.contains(holder.getAdapterPosition())) {
+                    selectedItemPosition.remove(Integer.valueOf(holder.getAdapterPosition()));
+                    holder.timeButton.setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_primary, null));
+                } else {
+                    selectedItemPosition.add(holder.getAdapterPosition());
+                    holder.timeButton.setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_secondary, null));
+                }
             }
         });
 
-        if (selectedItemPosition.contains(holder.getAdapterPosition())) {
-            holder.timeButton.setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_secondaryContainer, null));
-        } else {
-            holder.timeButton.setBackgroundColor(holder.timeButton.getContext().getColor(R.color.md_theme_light_primary));
-        }
     }
 
     @Override
