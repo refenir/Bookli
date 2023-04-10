@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookli.BookingDataService;
 import com.example.bookli.BookingsModel;
+import com.example.bookli.MainActivity;
 import com.example.bookli.OnRoomClickListener;
 import com.example.bookli.OnTimeClickListener;
 import com.example.bookli.R;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -64,6 +66,8 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     BookingDataService bookingDataService;
     int selectedRoomImage;
     int selectedRoomPosition;
+    String name;
+    String studentId;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -260,7 +264,8 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         for (int i=0; i<roomNames.length; i++) {
 
             roomModels.add(new RoomModel(roomImages[i], roomNames[i],
-                    String.format(getResources().getString(R.string.capacity), capacities[i])));
+                    String.format(getResources().getString(R.string.capacity), capacities[i])
+                    ));
         }
     }
 

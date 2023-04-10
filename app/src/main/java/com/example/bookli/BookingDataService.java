@@ -141,7 +141,9 @@ public class BookingDataService {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+
                     Log.d("VOLLEY", "post failed");
+                    error.printStackTrace();
                 }
 
 

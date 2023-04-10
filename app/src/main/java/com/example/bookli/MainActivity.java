@@ -1,12 +1,14 @@
 package com.example.bookli;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.example.bookli.ui.login.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -28,13 +30,31 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     EditText timePicker;
     public final String sharedPrefFile = "com.example.android.mainsharedprefs";
-    public static final String KEY = "MyKey";
     SharedPreferences mPreferences;
     BottomSheetDialog bottomSheetDialog;
+    String name;
+    String studentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // getting name and student id from login page
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            name = extras.getString("name");
+            studentId = extras.getString("studentId");
+        }
+
+        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        // app is already in use, or app is used for the first time
+        name = mPreferences.getString("name", name);
+        studentId = mPreferences.getString("studentId", studentId);
+
+        if (name == null || studentId == null) {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -51,49 +71,14 @@ public class MainActivity extends AppCompatActivity {
 
         bottomSheetDialog = new BottomSheetDialog(MainActivity.this);
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_content);
-
-        // QR Code scanner
-
-
-        // change time
-//        timePicker = findViewById(R.id.edit_time);
-//
-//        TimePickerDialog.OnTimeSetListener time = new TimePickerDialog.OnTimeSetListener() {
-//            @Override
-//            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-//                calendar.set(Calendar.HOUR, hour);
-//                calendar.set(Calendar.MINUTE, minute);
-//
-//                updateCalendar();
-//            }
-//
-//            private void updateCalendar() {
-//                String Format = "HH.mm";
-//                SimpleDateFormat sdf = new SimpleDateFormat(Format, Locale.US);
-//
-//                timePicker.setText(sdf.format(calendar.getTime()));
-//            }
-//        };
-//
-//        timePicker.setOnClickListener(new View.OnClickListener(){
-//
-//            @Override
-//            public void onClick(View view) {
-//                new TimePickerDialog(MainActivity.this, time, calendar.get(Calendar.HOUR),
-//                        calendar.get(Calendar.MINUTE), false).show();
-//            }
-//        });
-
-        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-        // app is already in use, or app is used for the first time
-        String timeText = mPreferences.getString(KEY, "");
-
     }
     // store previous inputs and show after closing and reopening the app (shared preferences)
     @Override
     protected void onPause(){
         super.onPause();
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+        preferencesEditor.putString("name", name);
+        preferencesEditor.putString("studentId", studentId);
         preferencesEditor.apply();
     }
 

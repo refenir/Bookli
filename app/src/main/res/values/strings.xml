@@ -33,4 +33,13 @@
         <item name="cap_dr32">8</item>
     </string-array>
     <string name="capacity">Capacity: %1$d</string>
+    <string name="title_activity_login">Log in</string>
+    <string name="prompt_name">Name</string>
+    <string name="prompt_student_id">Student ID</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_name">Not a valid name</string>
+    <string name="invalid_student_id">Student ID must be >1000000</string>
+    <string name="login_failed">"Login failed"</string>
 </resources>
