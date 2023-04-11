@@ -57,13 +57,6 @@ public class MainActivity extends AppCompatActivity {
             email = extras.getString("email");
         }
 
-        // pass the user details to home fragment
-        Fragment fragment = new Fragment();
-        fragment.setArguments(extras);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, fragment, "tag").commit();
-
-
         mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
         // app is already in use, or app is used for the first time
         name = mPreferences.getString("name", name);

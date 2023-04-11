@@ -86,12 +86,12 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         View root = binding.getRoot();
 
         // get user details from MainActivity
-        Bundle args = getArguments();
-        if (args != null) {
-            name = args.getString("name");
-            studentId = args.getInt("studentId");
-            email = args.getString("email");
-            phoneNumber = args.getString("phoneNumber");
+        Bundle bundle = requireActivity().getIntent().getExtras();
+        if (bundle != null) {
+            name = bundle.getString("name");
+            studentId = bundle.getInt("studentId");
+            phoneNumber = bundle.getString("phoneNumber");
+            email = bundle.getString("email");
         }
 
         // bottom sheet that shows time and book button
@@ -319,4 +319,5 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     @Override
     public void onTimeClick(int position) {
     }
+
 }
