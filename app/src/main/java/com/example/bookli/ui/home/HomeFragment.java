@@ -67,7 +67,9 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     int selectedRoomImage;
     int selectedRoomPosition;
     String name;
-    String studentId;
+    int studentId;
+    String email;
+    String phoneNumber;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -82,6 +84,15 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        // get user details from MainActivity
+        Bundle args = getArguments();
+        if (args != null) {
+            name = args.getString("name");
+            studentId = args.getInt("studentId");
+            email = args.getString("email");
+            phoneNumber = args.getString("phoneNumber");
+        }
 
         // bottom sheet that shows time and book button
         bottomSheetDialog = new BottomSheetDialog(root.getContext());
@@ -149,9 +160,10 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
                 // get the selected room
                 TextView bookingTitle = bottomSheetDialog.findViewById(R.id.booking_title);
                 String roomName = bookingTitle.getText().toString();
+                String occupantDetails = name + " " + phoneNumber + " " + email;
 
                 // update backend, post request to database to make booking
-                bookingDataService.makeBooking(dateSelected, selectedTimes[0], selectedTimes[selectedTimes.length-1], selectedRoomPosition, 1006876, new BookingDataService.MakeBookingResponseListener() {
+                bookingDataService.makeBooking(dateSelected, selectedTimes[0], selectedTimes[selectedTimes.length-1], selectedRoomPosition, studentId, occupantDetails, new BookingDataService.MakeBookingResponseListener() {
                     @Override
                     public void onError(String msg) {
                         Toast.makeText(getContext(), msg.toString(), Toast.LENGTH_SHORT).show();
@@ -167,7 +179,10 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
                         intent.putExtra("selectedDate", dateSelected);
                         intent.putExtra("image", selectedRoomImage);
                         intent.putExtra("bookingId", bookingId);
+                        timesAdapter.clearSelectedItemPosition();
+                        timesAdapter.notifyDataSetChanged();
                         startActivity(intent);
+
                     }
                 });
             }

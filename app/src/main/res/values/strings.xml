@@ -41,5 +41,22 @@
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_name">Not a valid name</string>
     <string name="invalid_student_id">Student ID must be >1000000</string>
+    <string name="invalid_phone_number">Phone number must be 8 characters long</string>
+    <string name="invalid_email">Invalid email</string>
     <string name="login_failed">"Login failed"</string>
+    //for profile page dummy
+
+    <string name="user_name">John Doe</string>
+    <string name="user_email">johndoe@example.com</string>
+    <string name="user_phone">1234567890</string>
+    <string name="user_school_id">1234</string>
+    <string name="edit_button_text">EDIT</string>
+    <string name="save_button_text">Save</string>
+    <string name="email_label">Email:</string>
+    <string name="name_label">Name:</string>
+    <string name="school_id_label">School ID:</string>
+    <string name="phone_label">Phone Number:</string>
+    <string name="share">Share</string>
+    <string name="reminder">You have an upcoming meeting in 15mins.</string>
+
 </resources>

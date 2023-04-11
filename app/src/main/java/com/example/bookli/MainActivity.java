@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.example.bookli.ui.home.HomeFragment;
+import com.example.bookli.ui.home.HomeViewModel;
 import com.example.bookli.ui.login.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -15,6 +17,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -29,11 +34,15 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     EditText timePicker;
-    public final String sharedPrefFile = "com.example.android.mainsharedprefs";
+    public final String sharedPrefFile = "com.example.android.mainsharedpref";
     SharedPreferences mPreferences;
     BottomSheetDialog bottomSheetDialog;
     String name;
-    String studentId;
+    int studentId = -1;
+    String phoneNumber;
+    String email;
+    private HomeViewModel homeViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +52,24 @@ public class MainActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             name = extras.getString("name");
-            studentId = extras.getString("studentId");
+            studentId = extras.getInt("studentId");
+            phoneNumber = extras.getString("phoneNumber");
+            email = extras.getString("email");
         }
+
+        // pass the user details to home fragment
+        Fragment fragment = new Fragment();
+        fragment.setArguments(extras);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, fragment, "tag").commit();
+
 
         mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
         // app is already in use, or app is used for the first time
         name = mPreferences.getString("name", name);
-        studentId = mPreferences.getString("studentId", studentId);
+        studentId = mPreferences.getInt("studentId", studentId);
 
-        if (name == null || studentId == null) {
+        if (name == null || studentId == -1) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
         }
@@ -71,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         bottomSheetDialog = new BottomSheetDialog(MainActivity.this);
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_content);
+
     }
     // store previous inputs and show after closing and reopening the app (shared preferences)
     @Override
@@ -78,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
         preferencesEditor.putString("name", name);
-        preferencesEditor.putString("studentId", studentId);
+        preferencesEditor.putInt("studentId", studentId);
         preferencesEditor.apply();
     }
 

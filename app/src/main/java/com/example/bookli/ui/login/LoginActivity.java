@@ -5,7 +5,9 @@ import android.app.Activity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -23,18 +25,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.bookli.BookingDataService;
 import com.example.bookli.MainActivity;
 import com.example.bookli.R;
+import com.example.bookli.UserModel;
 import com.example.bookli.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
+    BookingDataService bookingDataService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        bookingDataService = new BookingDataService(this);
 
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -44,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
 
         final EditText nameEditText = binding.name;
         final EditText studentIdEditText = binding.studentId;
+        final EditText phoneNumberEditText = binding.phoneNumber;
+        final EditText emailEditText = binding.email;
         final Button loginButton = binding.login;
         final ProgressBar loadingProgressBar = binding.loading;
 
@@ -59,6 +68,12 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 if (loginFormState.getStudentIdError() != null) {
                     studentIdEditText.setError(getString(loginFormState.getStudentIdError()));
+                }
+                if(loginFormState.getPhoneNumberError() != null) {
+                    phoneNumberEditText.setError(getString(loginFormState.getPhoneNumberError()));
+                }
+                if(loginFormState.getEmailError() != null) {
+                    emailEditText.setError(getString(loginFormState.getEmailError()));
                 }
             }
         });
@@ -97,11 +112,15 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 loginViewModel.loginDataChanged(nameEditText.getText().toString(),
-                        studentIdEditText.getText().toString());
+                        studentIdEditText.getText().toString(),
+                        phoneNumberEditText.getText().toString(),
+                        emailEditText.getText().toString());
             }
         };
         nameEditText.addTextChangedListener(afterTextChangedListener);
         studentIdEditText.addTextChangedListener(afterTextChangedListener);
+        emailEditText.addTextChangedListener(afterTextChangedListener);
+        phoneNumberEditText.addTextChangedListener(afterTextChangedListener);
         studentIdEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
@@ -118,20 +137,41 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(nameEditText.getText().toString(),
-                        studentIdEditText.getText().toString());
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra("name", nameEditText.getText().toString());
-                intent.putExtra("studentId", studentIdEditText.getText().toString());
-                startActivity(intent);
+//                loginViewModel.login(nameEditText.getText().toString(),
+//                        studentIdEditText.getText().toString());
+                bookingDataService.postStudentInfo(Integer.parseInt(studentIdEditText.getText().toString()),
+                        nameEditText.getText().toString(),
+                        phoneNumberEditText.getText().toString(),
+                        emailEditText.getText().toString(),
+                        new BookingDataService.PostStudentInfoResponseListener() {
+                            @Override
+                            public void onError(String msg) {
+
+                            }
+
+                            @Override
+                            public void onResponse(UserModel userModel) {
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("studentId", userModel.getStudentId());
+                                intent.putExtra("name", userModel.getName());
+                                intent.putExtra("phoneNumber", userModel.getPhoneNumber());
+                                intent.putExtra("email", userModel.getEmail());
+                                startActivity(intent);
+                            }
+                        });
             }
         });
+
+        SharedPreferences pref = getSharedPreferences("AcitivityPref", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edt = pref.edit();
+        edt.putBoolean("activity_executed", true);
+        edt.apply();
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
+//        String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful logged in experience
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {

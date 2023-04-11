@@ -1,5 +1,7 @@
 package com.example.bookli.ui.login;
 
+import android.graphics.LinearGradient;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -8,6 +10,8 @@ import com.example.bookli.data.LoginRepository;
 import com.example.bookli.data.Result;
 import com.example.bookli.data.model.LoggedInUser;
 import com.example.bookli.R;
+
+import java.util.regex.Pattern;
 
 public class LoginViewModel extends ViewModel {
 
@@ -39,11 +43,15 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    public void loginDataChanged(String name, String studentId) {
+    public void loginDataChanged(String name, String studentId, String phoneNumber, String email) {
         if (!isUserNameValid(name)) {
-            loginFormState.setValue(new LoginFormState(R.string.invalid_name, null));
+            loginFormState.setValue(new LoginFormState(R.string.invalid_name, null, null, null));
         } else if (!isStudentIdValid(studentId)) {
-            loginFormState.setValue(new LoginFormState(null, R.string.invalid_student_id));
+            loginFormState.setValue(new LoginFormState(null, R.string.invalid_student_id, null, null));
+        } else if (!isPhoneNumberValid(phoneNumber)) {
+            loginFormState.setValue(new LoginFormState(null, null, R.string.invalid_phone_number, null));
+        } else if (!isEmailValid(email)) {
+            loginFormState.setValue(new LoginFormState(null, null, null, R.string.invalid_email));
         } else {
             loginFormState.setValue(new LoginFormState(true));
         }
@@ -66,5 +74,15 @@ public class LoginViewModel extends ViewModel {
             return Integer.parseInt(studentId.trim()) > 1000000;
         }
         return false;
+    }
+
+    private boolean isPhoneNumberValid(String phoneNumber) {
+        return phoneNumber.length() == 8;
+    }
+
+    private boolean isEmailValid(String email) {
+        return Pattern.compile("^(.+)@(\\S+) $")
+                .matcher(email)
+                .matches();
     }
 }

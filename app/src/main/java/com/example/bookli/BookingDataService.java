@@ -23,48 +23,13 @@ public class BookingDataService {
 
     // change according to ip address of the server
     public static final String QUERY_FOR_BOOKINGS = "http://10.16.61.159:8080/bookings";
+    public static final String QUERY_FOR_STUDENT = "http://10.16.61.159:8080/student";
     Context context;
-    String endTime;
     int bookingId;
 
     public BookingDataService(Context context) {
         this.context = context;
     }
-
-    public interface VolleyResponseListener {
-        void onError(String msg);
-
-        void onResponse(String endTime);
-    }
-//  delete later
-//    public void getEndTime(VolleyResponseListener volleyResponseListener) {
-//        String url = QUERY_FOR_BOOKINGS;
-//
-//        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
-//                new Response.Listener<JSONArray>() {
-//                    @Override
-//                    public void onResponse(JSONArray response) {
-//                        endTime = "";
-//                        try {
-//                            JSONObject bookingInfo = response.getJSONObject(0);
-//                            endTime = bookingInfo.getString("endTime");
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//
-////                        Toast.makeText(context, "End Time = " + endTime, Toast.LENGTH_LONG).show();
-//                        volleyResponseListener.onResponse(endTime);
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-////                Toast.makeText(context, "Smth wrong", Toast.LENGTH_LONG).show();
-//                volleyResponseListener.onError("smth wrong.");
-//            }
-//        });
-//
-//        MySingleton.getInstance(context).addToRequestQueue(request);
-//    }
 
     public interface BookingResponseListener {
         void onError(String msg);
@@ -114,7 +79,7 @@ public class BookingDataService {
         void onResponse(int bookingId);
     }
 // To make a booking
-    public void makeBooking(String date, String startTime, String endTime, int roomId, int studentId, MakeBookingResponseListener makeBookingResponseListener){
+    public void makeBooking(String date, String startTime, String endTime, int roomId, int studentId, String occupantDetails, MakeBookingResponseListener makeBookingResponseListener){
         try{
             String url = QUERY_FOR_BOOKINGS;
             JSONObject jsonBody = new JSONObject();
@@ -124,6 +89,7 @@ public class BookingDataService {
             jsonBody.put("endTime", endTime.substring(0,2) + ":" + endTime.substring(2) + ":00");
             jsonBody.put("roomId", roomId);
             jsonBody.put("studentId", studentId);
+            jsonBody.put("occupantDetails", occupantDetails);
 
             JsonObjectRequest jsonObject = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
                     new Response.Listener<JSONObject>() {
@@ -177,5 +143,48 @@ public class BookingDataService {
             }
         });
         MySingleton.getInstance(context).addToRequestQueue(jsonObject);
+    }
+    public interface PostStudentInfoResponseListener {
+        void onError(String msg);
+
+        void onResponse(UserModel userModel);
+    }
+    public void postStudentInfo(int studentId, String name, String phoneNumber, String email, PostStudentInfoResponseListener postStudentInfoResponseListener) {
+        try {
+            String url = QUERY_FOR_STUDENT + "s";
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("studentId", studentId);
+            jsonBody.put("name", name);
+            jsonBody.put("phoneNumber", phoneNumber);
+            jsonBody.put("email", email);
+            jsonBody.put("password", "password");
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d("VOLLEY", "student post success");
+                            try{
+                                JSONObject student = response.getJSONObject("result");
+                                UserModel user = new UserModel();
+                                user.setStudentId(student.getInt("studentId"));
+                                user.setName(student.getString("name"));
+                                user.setPhoneNumber(student.getString("phoneNumber"));
+                                user.setEmail(student.getString("email"));
+                                postStudentInfoResponseListener.onResponse(user);
+                            } catch (JSONException e){
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                }
+            });
+            MySingleton.getInstance(context).addToRequestQueue(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
