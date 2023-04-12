@@ -30,6 +30,8 @@ import com.example.bookli.MainActivity;
 import com.example.bookli.R;
 import com.example.bookli.UserModel;
 import com.example.bookli.databinding.ActivityLoginBinding;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -49,10 +51,8 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        final EditText nameEditText = binding.name;
-        final EditText studentIdEditText = binding.studentId;
-        final EditText phoneNumberEditText = binding.phoneNumber;
-        final EditText emailEditText = binding.email;
+        final TextInputEditText nameEditText = binding.getRoot().findViewById(R.id.name);
+        final TextInputEditText studentIdEditText = binding.getRoot().findViewById(R.id.student_id);
         final Button loginButton = binding.login;
         final ProgressBar loadingProgressBar = binding.loading;
 
@@ -68,12 +68,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 if (loginFormState.getStudentIdError() != null) {
                     studentIdEditText.setError(getString(loginFormState.getStudentIdError()));
-                }
-                if(loginFormState.getPhoneNumberError() != null) {
-                    phoneNumberEditText.setError(getString(loginFormState.getPhoneNumberError()));
-                }
-                if(loginFormState.getEmailError() != null) {
-                    emailEditText.setError(getString(loginFormState.getEmailError()));
                 }
             }
         });
@@ -112,15 +106,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 loginViewModel.loginDataChanged(nameEditText.getText().toString(),
-                        studentIdEditText.getText().toString(),
-                        phoneNumberEditText.getText().toString(),
-                        emailEditText.getText().toString());
+                        studentIdEditText.getText().toString());
             }
         };
         nameEditText.addTextChangedListener(afterTextChangedListener);
         studentIdEditText.addTextChangedListener(afterTextChangedListener);
-        emailEditText.addTextChangedListener(afterTextChangedListener);
-        phoneNumberEditText.addTextChangedListener(afterTextChangedListener);
+
         studentIdEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
@@ -141,8 +132,6 @@ public class LoginActivity extends AppCompatActivity {
 //                        studentIdEditText.getText().toString());
                 bookingDataService.postStudentInfo(Integer.parseInt(studentIdEditText.getText().toString()),
                         nameEditText.getText().toString(),
-                        phoneNumberEditText.getText().toString(),
-                        emailEditText.getText().toString(),
                         new BookingDataService.PostStudentInfoResponseListener() {
                             @Override
                             public void onError(String msg) {

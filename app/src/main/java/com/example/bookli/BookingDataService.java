@@ -1,5 +1,6 @@
 package com.example.bookli;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,7 +24,7 @@ public class BookingDataService {
 
     // change according to ip address of the server
     public static final String QUERY_FOR_BOOKINGS = "http://10.16.61.159:8080/bookings";
-    public static final String QUERY_FOR_STUDENT = "http://10.16.61.159:8080/student";
+    public static final String QUERY_FOR_STUDENT = "http://10.16.61.159:8080/students";
     Context context;
     int bookingId;
 
@@ -144,20 +145,21 @@ public class BookingDataService {
         });
         MySingleton.getInstance(context).addToRequestQueue(jsonObject);
     }
+
     public interface PostStudentInfoResponseListener {
         void onError(String msg);
 
         void onResponse(UserModel userModel);
     }
-    public void postStudentInfo(int studentId, String name, String phoneNumber, String email, PostStudentInfoResponseListener postStudentInfoResponseListener) {
+    public void postStudentInfo(int studentId, String name, PostStudentInfoResponseListener postStudentInfoResponseListener) {
         try {
-            String url = QUERY_FOR_STUDENT + "s";
+            String url = QUERY_FOR_STUDENT;
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("studentId", studentId);
             jsonBody.put("name", name);
-            jsonBody.put("phoneNumber", phoneNumber);
-            jsonBody.put("email", email);
             jsonBody.put("password", "password");
+            jsonBody.put("email", "null");
+            jsonBody.put("phoneNumber", "null");
 
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
                     new Response.Listener<JSONObject>() {
@@ -169,8 +171,8 @@ public class BookingDataService {
                                 UserModel user = new UserModel();
                                 user.setStudentId(student.getInt("studentId"));
                                 user.setName(student.getString("name"));
-                                user.setPhoneNumber(student.getString("phoneNumber"));
-                                user.setEmail(student.getString("email"));
+                                user.setPhoneNumber(null);
+                                user.setEmail(null);
                                 postStudentInfoResponseListener.onResponse(user);
                             } catch (JSONException e){
                                 e.printStackTrace();

@@ -43,15 +43,11 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    public void loginDataChanged(String name, String studentId, String phoneNumber, String email) {
+    public void loginDataChanged(String name, String studentId) {
         if (!isUserNameValid(name)) {
             loginFormState.setValue(new LoginFormState(R.string.invalid_name, null, null, null));
         } else if (!isStudentIdValid(studentId)) {
             loginFormState.setValue(new LoginFormState(null, R.string.invalid_student_id, null, null));
-        } else if (!isPhoneNumberValid(phoneNumber)) {
-            loginFormState.setValue(new LoginFormState(null, null, R.string.invalid_phone_number, null));
-        } else if (!isEmailValid(email)) {
-            loginFormState.setValue(new LoginFormState(null, null, null, R.string.invalid_email));
         } else {
             loginFormState.setValue(new LoginFormState(true));
         }
@@ -71,18 +67,9 @@ public class LoginViewModel extends ViewModel {
     // A placeholder studentId validation check
     private boolean isStudentIdValid(String studentId) {
         if (!studentId.equals("")) {
-            return Integer.parseInt(studentId.trim()) > 1000000;
+            return Integer.parseInt(studentId.trim()) > 1000000 && Integer.parseInt(studentId.trim()) < 2000000;
         }
         return false;
     }
 
-    private boolean isPhoneNumberValid(String phoneNumber) {
-        return phoneNumber.length() == 8;
-    }
-
-    private boolean isEmailValid(String email) {
-        return Pattern.compile("^(.+)@(\\S+) $")
-                .matcher(email)
-                .matches();
-    }
 }
