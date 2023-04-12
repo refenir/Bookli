@@ -187,4 +187,45 @@ public class BookingDataService {
             e.printStackTrace();
         }
     }
+    public interface EventsResponseListener {
+        void onError(String msg);
+
+        void onResponse(List<BookingsModel> bookings);
+    }
+    public void getBookedTimesByDateByStudentById(String name, String date, int studentId, EventsResponseListener eventsResponseListener){
+        String s = "/student/" + studentId + "?startDate=" + date + "&endDate=" + date;
+        String url = QUERY_FOR_BOOKINGS  + s; //in the gdoc, it also asks for string of rooms, is that *?
+        List<BookingsModel> bookings = new ArrayList<>();
+        // get json object
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try{
+                    for (int i = 0; i < response.length(); i++) {
+                        BookingsModel one_booking = new BookingsModel();
+                        JSONObject booking = response.getJSONObject(i);
+                        one_booking.setDate(booking.getString("date"));
+                        one_booking.setEndTime(booking.getString("endTime"));
+                        one_booking.setStartTime(booking.getString("startTime"));
+                        one_booking.setStudentId(booking.getInt("studentId"));
+                        one_booking.setRoomId(booking.getInt("roomId"));
+                        bookings.add(one_booking);
+                    }
+                    Log.i("VOLLEY", "got data");
+                    eventsResponseListener.onResponse(bookings);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        MySingleton.getInstance(context).addToRequestQueue(request);
+    }
 }

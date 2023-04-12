@@ -44,23 +44,23 @@
                 tools:layout_editor_absoluteX="-62dp">
 
                 <Button
-                    android:id="@+id/edit_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:layout_weight="1"
-                    android:backgroundTint="@color/md_theme_dark_primaryContainer"
-                    android:text="Edit"
-                    android:textSize="15sp" />
-
-                <Button
                     android:id="@+id/share_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:layout_weight="1"
-                    android:backgroundTint="@color/md_theme_dark_background"
+                    android:backgroundTint="@color/md_theme_dark_primaryContainer"
                     android:text="Share"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/delete_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/md_theme_dark_background"
+                    android:text="Delete"
                     android:textSize="15sp" />
 
             </LinearLayout>

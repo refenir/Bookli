@@ -1,4 +1,4 @@
-package com.example.bookli.ui.dashboard;
+package com.example.bookli.ui.calender;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,7 +10,7 @@ public class DashboardViewModel extends ViewModel {
 
     public DashboardViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        mText.setValue("This is the calender fragment");
     }
 
     public LiveData<String> getText() {
