@@ -26,7 +26,7 @@ class LoginFormState {
     }
 
     @Nullable
-    Integer geNameError() {
+    Integer getNameError() {
         return nameError;
     }
 

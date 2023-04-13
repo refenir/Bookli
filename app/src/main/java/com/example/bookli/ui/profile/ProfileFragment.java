@@ -1,8 +1,8 @@
 package com.example.bookli.ui.profile;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +35,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     private Button editButton;
     private Button submitButton;
 
-    private ProfileViewModel mViewModel;
+    private ProfileViewModel profileViewModel;
     private FragmentProfileBinding binding;
     int studentId;
     String name;
@@ -43,16 +45,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     public final String sharedPrefFile = "com.example.android.mainsharedpref";
     SharedPreferences prefs;
 
-
-    public static ProfileFragment newInstance() {
-        return new ProfileFragment();
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        ProfileViewModel profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -69,12 +66,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
             studentId = extras.getInt("studentId");
             name = extras.getString("name");
         }
-
-//        prefs = getActivity().getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE);
-//        name = prefs.getString("name", name);
-//        studentId = prefs.getInt("studentId", studentId);
-//        email = prefs.getString("email", email);
-//        phoneNumber = prefs.getString("phoneNumber", phoneNumber);
 
         nameEdit = binding.nameEdit;
         emailEdit = binding.emailEdit;
@@ -99,66 +90,46 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         editButton.setOnClickListener(this);
         submitButton.setOnClickListener(this);
 
-        // Set up the edit button click listener
-//        editButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                if (!isEditing) {
-//                    // If we're not currently editing, switch to edit mode
-//                    isEditing = true;
-//                    editButton.setVisibility(View.GONE);
-//                    submitButton.setVisibility(View.VISIBLE);
-//                    nameEdit.setEnabled(true);
-//                    emailEdit.setEnabled(true);
-//                    phoneEdit.setEnabled(true);
-//                    studentIdEdit.setEnabled(true);
-//                } else {
-//                    // If we are currently editing, save the changes and switch back to view mode
-//                    isEditing = false;
-//                    editButton.setText(getString(R.string.edit_button_text));
-//                    nameEdit.setEnabled(false);
-//                    emailEdit.setEnabled(false);
-//                    phoneEdit.setEnabled(false);
-//                    studentIdEdit.setEnabled(false);
-//
-//                    // Save the changes to the user's information
-//                    String newName = nameEdit.getText().toString();
-//                    String newEmail = emailEdit.getText().toString();
-//                    String newPhone = phoneEdit.getText().toString();
-//                    String newSchoolId = studentIdEdit.getText().toString();
-//
-//                    // TODO: Save the changes to the user's information in your app's data store
-//
-//                    // Show submit button and hide edit button
-//                    submitButton.setVisibility(View.VISIBLE);
-//                    editButton.setVisibility(View.GONE);
-//
-//                }
-//            }
-//        });
+        profileViewModel.getLoginFormState().observe(getViewLifecycleOwner(), new Observer<ProfileFormState>() {
+            @Override
+            public void onChanged(ProfileFormState profileFormState) {
+                if (profileFormState == null) return;
+                submitButton.setEnabled(profileFormState.isDataValid());
+                if (profileFormState.getNameError() != null) {
+                    nameEdit.setError(getActivity().getString(profileFormState.getNameError()));
+                }
+                if (profileFormState.getEmailError() != null) {
+                    emailEdit.setError(getActivity().getString(profileFormState.getEmailError()));
+                }
+                if (profileFormState.getPhoneNumberError() != null) {
+                    phoneEdit.setError(getActivity().getString(profileFormState.getPhoneNumberError()));
+                }
+            }
+        });
 
-//        submitButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // Hide submit button and show edit button
-//                submitButton.setVisibility(View.GONE);
-//                editButton.setVisibility(View.VISIBLE);
-//            }
-//        });
+        TextWatcher afterTextChangedListener = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                profileViewModel.profileDataChanged(nameEdit.getText().toString(), emailEdit.getText().toString(),
+                        phoneEdit.getText().toString());
+            }
+        };
+
+        nameEdit.addTextChangedListener(afterTextChangedListener);
+        emailEdit.addTextChangedListener(afterTextChangedListener);
+        phoneEdit.addTextChangedListener(afterTextChangedListener);
 
         return root;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-//        SharedPreferences.Editor preferencesEditor = prefs.edit();
-//        preferencesEditor.putString("name", name);
-//        preferencesEditor.putString("email", email);
-//        preferencesEditor.putString("phoneNumber", phoneNumber);
-//        preferencesEditor.putInt("studentId", studentId);
-//        preferencesEditor.apply();
     }
 
     @Override

@@ -20,7 +20,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +30,6 @@ import com.example.bookli.R;
 import com.example.bookli.UserModel;
 import com.example.bookli.databinding.ActivityLoginBinding;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -65,8 +63,8 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 loginButton.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.geNameError() != null) {
-                    nameEditText.setError(getString(loginFormState.geNameError()));
+                if (loginFormState.getNameError() != null) {
+                    nameEditText.setError(getString(loginFormState.getNameError()));
                 }
                 if (loginFormState.getStudentIdError() != null) {
                     studentIdEditText.setError(getString(loginFormState.getStudentIdError()));

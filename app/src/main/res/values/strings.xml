@@ -41,6 +41,8 @@
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_name">Invalid name</string>
     <string name="invalid_student_id">Invalid student ID</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="invalid_phone_number">Invalid phone number</string>
     <string name="login_failed">"Login failed"</string>
     //for profile page dummy
 
@@ -60,5 +62,6 @@
     <string name="title_schedule">Schedule</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_phone_number">Phone Number</string>
+
 
 </resources>

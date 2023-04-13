@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences mPreferences;
     BottomSheetDialog bottomSheetDialog;
     String name;
-    int studentId = -1;
+    int studentId = 1000000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,15 +50,10 @@ public class MainActivity extends AppCompatActivity {
             studentId = extras.getInt("studentId");
         }
 
-//        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-//        // app is already in use, or app is used for the first time
-//        name = mPreferences.getString("name", name);
-//        studentId = mPreferences.getInt("studentId", studentId);
-
-        if (name == null || studentId == -1) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
-        }
+//        if (name == null || studentId == -1) {
+//            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+//            startActivity(intent);
+//        }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -76,15 +71,6 @@ public class MainActivity extends AppCompatActivity {
         bottomSheetDialog = new BottomSheetDialog(MainActivity.this);
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_content);
 
-    }
-    // store previous inputs and show after closing and reopening the app (shared preferences)
-    @Override
-    protected void onPause(){
-        super.onPause();
-//        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-//        preferencesEditor.putString("name", name);
-//        preferencesEditor.putInt("studentId", studentId);
-//        preferencesEditor.apply();
     }
 
     @Override
