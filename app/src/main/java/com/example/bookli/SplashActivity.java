@@ -11,12 +11,13 @@ import androidx.annotation.Nullable;
 import com.example.bookli.ui.login.LoginActivity;
 
 public class SplashActivity extends Activity {
+    public final String sharedPrefFile = "com.example.android.mainsharedpref";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        SharedPreferences pref = getSharedPreferences("ActivityPref", Context.MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE);
         if (pref.getBoolean("activity_executed", false)){
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);

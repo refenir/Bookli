@@ -38,6 +38,8 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
     BookingDataService bookingDataService;
+    SharedPreferences prefs;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

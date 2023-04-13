@@ -58,5 +58,7 @@
     <string name="reminder">You have an upcoming meeting in 15mins.</string>
     <string name="title_profile">Profile</string>
     <string name="title_schedule">Schedule</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_phone_number">Phone Number</string>
 
 </resources>

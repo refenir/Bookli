@@ -39,11 +39,6 @@ public class MainActivity extends AppCompatActivity {
     BottomSheetDialog bottomSheetDialog;
     String name;
     int studentId = -1;
-    String phoneNumber;
-    String email;
-    private HomeViewModel homeViewModel;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,14 +48,12 @@ public class MainActivity extends AppCompatActivity {
         if (extras != null) {
             name = extras.getString("name");
             studentId = extras.getInt("studentId");
-            phoneNumber = extras.getString("phoneNumber");
-            email = extras.getString("email");
         }
 
-        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-        // app is already in use, or app is used for the first time
-        name = mPreferences.getString("name", name);
-        studentId = mPreferences.getInt("studentId", studentId);
+//        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+//        // app is already in use, or app is used for the first time
+//        name = mPreferences.getString("name", name);
+//        studentId = mPreferences.getInt("studentId", studentId);
 
         if (name == null || studentId == -1) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -88,10 +81,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-        preferencesEditor.putString("name", name);
-        preferencesEditor.putInt("studentId", studentId);
-        preferencesEditor.apply();
+//        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+//        preferencesEditor.putString("name", name);
+//        preferencesEditor.putInt("studentId", studentId);
+//        preferencesEditor.apply();
     }
 
     @Override

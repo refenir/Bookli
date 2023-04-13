@@ -123,6 +123,7 @@ public class BookingDataService {
         }
     }
 
+    // delete a booking
     public interface DeleteBookingResponseListener {
         void onError(String msg);
 
@@ -147,6 +148,8 @@ public class BookingDataService {
         MySingleton.getInstance(context).addToRequestQueue(jsonObject);
     }
 
+
+    // post a new student's information to the backend
     public interface PostStudentInfoResponseListener {
         void onError(String msg);
 
@@ -190,6 +193,54 @@ public class BookingDataService {
             e.printStackTrace();
         }
     }
+
+    // update student's particulars
+    public interface UpdateStudentResponseListener {
+        void onError(String msg);
+
+        void onResponse(UserModel userModel);
+    }
+    public void updateStudentInfo(int studentId, String name, String email, String phoneNumber, UpdateStudentResponseListener updateStudentResponseListener) {
+        try{
+            String url = QUERY_FOR_STUDENT + "/" + studentId;
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("studentId", studentId);
+            jsonBody.put("name", name);
+            jsonBody.put("password", "password");
+            jsonBody.put("email", email);
+            jsonBody.put("phoneNumber", phoneNumber);
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, jsonBody,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d("VOLLEY", "update student success");
+                            try {
+                                JSONObject student = response;
+                                UserModel user = new UserModel();
+                                user.setStudentId(response.getInt("studentId"));
+                                user.setName(response.getString("name"));
+                                user.setPhoneNumber(response.getString("phoneNumber"));
+                                user.setEmail(response.getString("email"));
+                                updateStudentResponseListener.onResponse(user);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                }
+            });
+            MySingleton.getInstance(context).addToRequestQueue(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // get one student's booking
     public interface EventsResponseListener {
         void onError(String msg);
 
