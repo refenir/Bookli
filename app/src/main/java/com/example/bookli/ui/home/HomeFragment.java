@@ -22,23 +22,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookli.BookingDataService;
 import com.example.bookli.BookingsModel;
-import com.example.bookli.MainActivity;
-import com.example.bookli.OnRoomClickListener;
-import com.example.bookli.OnTimeClickListener;
 import com.example.bookli.R;
 import com.example.bookli.databinding.FragmentHomeBinding;
 import com.example.bookli.ui.booking_confirmation.BookingConfirmationActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.datepicker.MaterialCalendar;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointForward;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.textfield.TextInputEditText;
 
-import org.json.JSONObject;
-
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -70,6 +72,8 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     int studentId;
     String email;
     String phoneNumber;
+    TextInputEditText dateEdit;
+    Boolean[] roomAvailability = new Boolean[4];
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -100,10 +104,11 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
 
         // initialize current date in booking form
         c = Calendar.getInstance();
+        dateEdit = binding.search;
+        SimpleDateFormat date = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+        SimpleDateFormat dateFormatBackend = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        dateEdit.setText(date.format(c.getTime()));
         dateSelected = bottomSheetDialog.findViewById(R.id.date_selection);
-        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-        formattedDate = date.format(c.getTime());
-        dateSelected.setText(formattedDate);
 
        //  Increment date, icon button at the right side
         incrementDate = bottomSheetDialog.findViewById(R.id.increment_date);
@@ -111,8 +116,9 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
             @Override
             public void onClick(View view) {
                 // date + 1
+
                 c.add(Calendar.DATE, 1);
-                formattedDate = date.format(c.getTime());
+                formattedDate = dateFormatBackend.format(c.getTime());
 
                 Log.v("NEXT DATE: ", formattedDate);
                 dateSelected.setText(formattedDate);
@@ -130,7 +136,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
             public void onClick(View view) {
                 // date - 1
                 c.add(Calendar.DATE, -1);
-                formattedDate = date.format(c.getTime());
+                formattedDate = dateFormatBackend.format(c.getTime());
 
                 Log.v("PREV DATE:", formattedDate);
                 dateSelected.setText(formattedDate);
@@ -140,8 +146,6 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
                 timesAdapter.clearSelectedItemPosition();
             }
         });
-
-        rooms = root.findViewById(R.id.rooms);
 
         bookButton = bottomSheetDialog.findViewById(R.id.book_button);
         bookButton.setOnClickListener(new View.OnClickListener() {
@@ -188,35 +192,39 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
             }
         });
 
-        // change date
-//        datePicker = root.findViewById(R.id.edit_date);
-//        Calendar calendar = Calendar.getInstance();
-//        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-//            @Override
-//            public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-//                calendar.set(Calendar.YEAR, year);
-//                calendar.set(Calendar.MONTH, month);
-//                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-//
-//                updateCalendar();
-//            }
-//
-//            private void updateCalendar() {
-//                String Format = "dd/MM/yy";
-//                SimpleDateFormat sdf = new SimpleDateFormat(Format, Locale.US);
-//
-//                datePicker.setText(sdf.format(calendar.getTime()));
-//            }
-//        };
-//
-//        datePicker.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new DatePickerDialog(requireContext(), date, calendar.get(Calendar.YEAR),
-//                        calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-//            }
-//        });
+        // set up date picker
+        CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder()
+                .setValidator(DateValidatorPointForward.now());
 
+        MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select Date")
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .setCalendarConstraints(constraintsBuilder.build())
+                .build();
+
+        datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+
+            @Override
+            public void onPositiveButtonClick(Object selection) {
+                dateEdit.setText(datePicker.getHeaderText());
+                try {
+                    Date newDate = formatDate(datePicker.getHeaderText());
+                    c.setTime(newDate);
+                    String date = dateFormatBackend.format(newDate);
+                    roomAvailability(date);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        });
+        // change date
+        dateEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                datePicker.show(getActivity().getSupportFragmentManager(), "tag");
+            }
+        });
         return root;
     }
 
@@ -227,7 +235,14 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         // All the rooms
         RecyclerView roomsRecyclerView = view.findViewById(R.id.room_recyclerview);
         roomsRecyclerView.setHasFixedSize(true);
-        setUpRoomModels();
+        SimpleDateFormat dateFormatBackend = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String currDate = null;
+        try {
+            currDate = dateFormatBackend.format(formatDate(dateEdit.getText().toString()));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        roomAvailability(currDate);
         roomsAdapter = new Room_RecyclerViewAdapter( getContext(), roomModels, this);
         roomsRecyclerView.setAdapter(roomsAdapter);
         roomsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
@@ -244,7 +259,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     // get the data for the unavailable times
     private void setTimeButtons(String date, int roomPosition){
 
-        bookingDataService.getBookedTimesByDateByRoom(date, roomPosition, new BookingDataService.BookingResponseListener() {
+        bookingDataService.getBookedTimesByDate(date, roomPosition, new BookingDataService.BookingResponseListener() {
             @Override
             public void onError(String msg) {
                 Toast.makeText(getContext(), "smth wrong", Toast.LENGTH_SHORT).show();
@@ -265,24 +280,65 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
                         setOfBookedTimings.add(time);
                     }
                 }
-//                Toast.makeText(getContext(), bookings.toString(), Toast.LENGTH_SHORT).show();
                 setUpTimeModels();
                 timesAdapter.notifyDataSetChanged();
+
             }
         });
     }
 
     private void setUpRoomModels(){
         roomModels.clear();
-        String[] roomNames = getResources().getStringArray(R.array.room_names);
-
-        for (int i=0; i<roomNames.length; i++) {
-
+        final String[] roomNames = getResources().getStringArray(R.array.room_names);
+        for (int i = 0; i < roomNames.length; i++) {
             roomModels.add(new RoomModel(roomImages[i], roomNames[i],
-                    String.format(getResources().getString(R.string.capacity), capacities[i])
-                    ));
+                    String.format(getResources().getString(R.string.capacity), capacities[i]),
+                    roomAvailability[i])
+            );
         }
     }
+
+    private void roomAvailability(String date){
+        bookingDataService.getBookedTimesByDate(date, -1, new BookingDataService.BookingResponseListener() {
+            @Override
+            public void onError(String msg) {
+                Toast.makeText(getContext(), "smth wrong", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(List<BookingsModel> bookings) {
+                for (int i = 0; i < roomImages.length; i++) {
+                    String[] times = getResources().getStringArray(R.array.times);
+                    List<String> timesList = new ArrayList<>(Arrays.asList(times));
+                    for (int x = 0; x < bookings.size(); x++) {
+                        if (bookings.get(x).getRoomId() == i){
+                            String endTime = bookings.get(x).getEndTime();
+                            String startTime = bookings.get(x).getStartTime();
+                            int[] range = IntStream.rangeClosed(Integer.parseInt(startTime.substring(0, 2)),
+                                    Integer.parseInt(endTime.substring(0, 2))).toArray();
+                            for (int j = 0; j < range.length; j++) {
+                                String time;
+                                if (range[j] < 10) time = "0" + range[j] + "00";
+                                else time = range[j] + "00";
+                                int index = timesList.indexOf(time);
+                                if (index != -1) {
+                                    timesList.remove(index);
+                                }
+                            }
+                        }
+                    }
+                    if (timesList.size() == 0) {
+                        roomAvailability[i] = false;
+                    } else {
+                        roomAvailability[i] = true;
+                    }
+                }
+                setUpRoomModels();
+                roomsAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
 
     private void setUpTimeModels(){
         timeModels.clear();
@@ -303,21 +359,48 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         super.onResume();
         timesAdapter.clearSelectedItemPosition();
         setTimeButtons(dateSelected.getText().toString(), selectedRoomPosition);
+        SimpleDateFormat dateFormatBackend = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String currDate = null;
+        try {
+            currDate = dateFormatBackend.format(formatDate(dateEdit.getText().toString()));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        roomAvailability(currDate);
     }
 
+    // When you click on a room card view, this will trigger
     @Override
-    public void onRoomClick(View view, int position) {
-        bottomSheetDialog.show();
+    public void onRoomClick(View view, int position) throws ParseException {
+        // set date to be the same as the date in the date search bar
+        TextView dateSelected = bottomSheetDialog.findViewById(R.id.date_selection);
+        String oldDate = dateEdit.getText().toString();
+        Date newDate = formatDate(oldDate);
+        c.setTime(newDate);
+        String newDateString = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(newDate);
+        dateSelected.setText(newDateString);
+        // populate room name to the room selected
         TextView roomName = bottomSheetDialog.findViewById(R.id.booking_title);
         roomName.setText(roomModels.get(position).getRoomName());
         selectedRoomImage = roomModels.get(position).getImage();
         selectedRoomPosition = position;
+        // disable unavailable times
         setTimeButtons(dateSelected.getText().toString(), selectedRoomPosition);
         timesAdapter.notifyDataSetChanged();
+        // make bottom sheet show up
+        bottomSheetDialog.show();
     }
 // maybe useless, delete
     @Override
     public void onTimeClick(int position) {
+    }
+
+    // Change date from "dd MMM yyy" format to "yyyy-MM-dd"
+    public Date formatDate(String date) throws ParseException {
+        SimpleDateFormat dt = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+        Date newDate = dt.parse(date);
+        String newDateString = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(newDate);
+        return newDate;
     }
 
 }

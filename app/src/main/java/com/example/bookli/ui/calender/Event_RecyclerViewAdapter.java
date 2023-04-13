@@ -9,9 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookli.OnRoomClickListener;
 import com.example.bookli.R;
-import com.example.bookli.ui.calender.EventModel;
 
 import java.util.ArrayList;
 

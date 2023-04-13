@@ -1,6 +1,7 @@
 package com.example.bookli.ui.home;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,11 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookli.OnRoomClickListener;
 import com.example.bookli.R;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_RecyclerViewAdapter.MyViewHolder>{
@@ -44,6 +46,11 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
         holder.roomName.setText(roomModels.get(position).getRoomName());
         holder.imageView.setImageResource(roomModels.get(position).getImage());
         holder.capacity.setText(roomModels.get(position).getCapacity());
+        if (!roomModels.get(position).getAvailable()) {
+            holder.card.setCardBackgroundColor(holder.card.getContext().getResources().getColor(R.color.md_theme_light_errorContainer, null));
+        } else {
+            holder.card.setCardBackgroundColor(Color.WHITE);
+        }
     }
 
     @Override
@@ -57,12 +64,14 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
         ImageView imageView;
         TextView roomName;
         TextView capacity;
+        CardView card;
 
         public MyViewHolder(@NonNull View itemView, OnRoomClickListener clickListener) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
             roomName = itemView.findViewById(R.id.roomName);
             capacity = itemView.findViewById(R.id.capacity);
+            card = itemView.findViewById(R.id.room_card);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -70,7 +79,11 @@ public class Room_RecyclerViewAdapter extends RecyclerView.Adapter<Room_Recycler
                     if (clickListener != null) {
                         int pos = getAdapterPosition();
                         if (pos != RecyclerView.NO_POSITION){
-                            clickListener.onRoomClick(view, pos);
+                            try {
+                                clickListener.onRoomClick(view, pos);
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     }
 

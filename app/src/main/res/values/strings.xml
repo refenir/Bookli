@@ -39,10 +39,8 @@
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
-    <string name="invalid_name">Not a valid name</string>
-    <string name="invalid_student_id">Student ID invalid</string>
-    <string name="invalid_phone_number">Phone number must be 8 characters long</string>
-    <string name="invalid_email">Invalid email</string>
+    <string name="invalid_name">Invalid name</string>
+    <string name="invalid_student_id">Invalid student ID</string>
     <string name="login_failed">"Login failed"</string>
     //for profile page dummy
 

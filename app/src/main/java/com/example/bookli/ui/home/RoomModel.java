@@ -4,11 +4,13 @@ public class RoomModel {
     int image;
     String roomName;
     String capacity;
+    Boolean available;
 
-    public RoomModel(int image, String roomName, String capacity) {
+    public RoomModel(int image, String roomName, String capacity, Boolean available) {
         this.image = image;
         this.roomName = roomName;
         this.capacity = capacity;
+        this.available = available;
     }
 
     public int getImage() {
@@ -21,5 +23,9 @@ public class RoomModel {
 
     public String getCapacity() {
         return capacity;
+    }
+
+    public Boolean getAvailable() {
+        return available;
     }
 }

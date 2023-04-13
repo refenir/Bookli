@@ -1,4 +1,4 @@
-package com.example.bookli;
+package com.example.bookli.ui.home;
 
 import android.view.View;
 

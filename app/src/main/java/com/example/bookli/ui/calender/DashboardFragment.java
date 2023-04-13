@@ -1,7 +1,5 @@
 package com.example.bookli.ui.calender;
 
-import static android.content.Intent.getIntent;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,20 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.example.bookli.OnRoomClickListener;
 import com.example.bookli.R;
 import com.example.bookli.databinding.FragmentDashboardBinding;
-import com.example.bookli.databinding.FragmentHomeBinding;
-import com.example.bookli.ui.calender.DashboardViewModel;
-import com.example.bookli.ui.calender.EventModel;
-import com.example.bookli.ui.calender.Event_RecyclerViewAdapter;
 import com.example.bookli.BookingDataService;
 import com.example.bookli.BookingsModel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.IntStream;
-import java.util.Calendar;
 
 public class DashboardFragment extends Fragment implements OnEventClickListener {
     private FragmentDashboardBinding binding;
