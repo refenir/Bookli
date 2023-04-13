@@ -44,11 +44,11 @@ public class Time_RecyclerViewAdapter extends RecyclerView.Adapter<Time_Recycler
         holder.timeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (selectedItemPosition.contains(holder.getAdapterPosition())) {
-                    selectedItemPosition.remove(Integer.valueOf(holder.getAdapterPosition()));
+                if (selectedItemPosition.contains(holder.getBindingAdapterPosition())) {
+                    selectedItemPosition.remove(Integer.valueOf(holder.getBindingAdapterPosition()));
                     holder.timeButton.setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_primary, null));
                 } else {
-                    selectedItemPosition.add(holder.getAdapterPosition());
+                    selectedItemPosition.add(holder.getBindingAdapterPosition());
                     holder.timeButton.setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_secondary, null));
                 }
             }

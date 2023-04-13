@@ -33,6 +33,7 @@ public class BookingConfirmationActivity extends AppCompatActivity {
     int roomImage;
     int bookingId;
     Button delete;
+    Button share;
     BookingDataService bookingDataService;
 
     @Override
@@ -60,9 +61,16 @@ public class BookingConfirmationActivity extends AppCompatActivity {
         roomTextView.setText("Room: " + roomName );
 
         timesTextView = findViewById(R.id.textView7);
-        timesTextView.setText("Time: " + Arrays.toString(selectedTimes)
-                .replace("[", "")
-                .replace("]", ""));
+        String startTime = selectedTimes[0];
+        String endTime = selectedTimes[selectedTimes.length - 1];
+        int endTimeInt = Integer.parseInt(endTime) + 100;
+        if (endTimeInt < 1000) {
+            endTime = "0" + endTimeInt;
+        } else {
+            endTime = String.valueOf(endTimeInt);
+        }
+        String duration = startTime + " - " + endTime;
+        timesTextView.setText("Time: " + duration);
 
         dateTextView = findViewById(R.id.textView6);
         dateTextView.setText("Date: " + selectedDate);
@@ -83,10 +91,23 @@ public class BookingConfirmationActivity extends AppCompatActivity {
                     @Override
                     public void onResponse() {
                         Toast.makeText(BookingConfirmationActivity.this, "delete successful", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
+                        finish();
                     }
                 });
+            }
+        });
+
+        share = findViewById(R.id.share_button1);
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                String durationLook = roomTextView.getText().toString().substring(6) + " from "
+                        + timesTextView.getText().toString().substring(6);
+                String shareBody = "Hi! We have an upcoming library booking at " + durationLook;
+                intent.putExtra(Intent.EXTRA_SUBJECT, shareBody);
+                startActivity(Intent.createChooser(intent, "Share using"));
             }
         });
     }

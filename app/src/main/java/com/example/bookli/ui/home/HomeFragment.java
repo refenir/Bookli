@@ -51,7 +51,6 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     ArrayList<TimeModel> timeModels = new ArrayList<>();
     int[] roomImages = {R.drawable.dr2_1, R.drawable.dr2_2, R.drawable.dr2_3, R.drawable.dr3_1};
     int[] capacities = {2, 5, 5, 8};
-    RelativeLayout rooms;
 
     BottomSheetDialog bottomSheetDialog;
     TextView dateSelected;
@@ -175,6 +174,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
 
                     @Override
                     public void onResponse(int bookingId) {
+                        timesAdapter.clearSelectedItemPosition();
                         Toast.makeText(getContext(), "Response:" + bookingId, Toast.LENGTH_SHORT).show();
                         // pass data to booking confirmation screen
                         Intent intent = new Intent(getActivity(), BookingConfirmationActivity.class);

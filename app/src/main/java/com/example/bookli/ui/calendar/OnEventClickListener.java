@@ -1,4 +1,4 @@
-package com.example.bookli.ui.calender;
+package com.example.bookli.ui.calendar;
 
 import android.view.View;
 

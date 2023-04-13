@@ -12,7 +12,7 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.bookli.ui.calender.DashboardFragment"
+        android:name="com.example.bookli.ui.calendar.DashboardFragment"
         android:label="@string/title_schedule"
         tools:layout="@layout/fragment_dashboard" />
 

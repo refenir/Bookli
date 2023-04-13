@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin">
 
 
     <ImageView
@@ -11,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="350dp"
         android:src="@drawable/dr21_background"
-        android:layout_marginVertical="@dimen/activity_horizontal_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -23,10 +23,11 @@
         android:layout_marginHorizontal="@dimen/activity_horizontal_margin">
 
         <Button
+            android:id="@+id/share_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/md_theme_dark_primaryContainer"
-            android:text="Edit"
+            android:backgroundTint="@color/md_theme_light_tertiary"
+            android:text="Share"
             android:textSize="15sp"
             android:layout_weight="1"
             android:layout_marginHorizontal="@dimen/activity_horizontal_margin"/>
@@ -62,8 +63,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:backgroundTint="@color/md_theme_dark_primary"
+        android:backgroundTint="@color/md_theme_light_secondaryContainer"
         android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+        app:contentPadding="@dimen/margin_between_views"
         app:cardCornerRadius="20dp"
         app:cardUseCompatPadding="true"
         app:layout_constraintEnd_toEndOf="parent"

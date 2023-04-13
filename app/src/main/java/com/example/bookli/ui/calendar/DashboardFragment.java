@@ -1,4 +1,4 @@
-package com.example.bookli.ui.calender;
+package com.example.bookli.ui.calendar;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,24 +20,25 @@ import com.example.bookli.R;
 import com.example.bookli.databinding.FragmentDashboardBinding;
 import com.example.bookli.BookingDataService;
 import com.example.bookli.BookingsModel;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class DashboardFragment extends Fragment implements OnEventClickListener {
     private FragmentDashboardBinding binding;
     ArrayList<EventModel> eventModels = new ArrayList<>();
     ArrayList<EventModel> eventData = new ArrayList<>();
-    public String day;
+    String date;
     RelativeLayout events;
     Event_RecyclerViewAdapter eventsAdapter;
     BookingDataService bookingDataService = new BookingDataService(getContext());
     ArrayList<EventModel> setOfEvents = new ArrayList<>();
     String name;
     int studentId;
-
-
-
-
+    Calendar c;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -54,6 +55,9 @@ public class DashboardFragment extends Fragment implements OnEventClickListener 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        date = sdf.format(c.getTime());
 
         CalendarView calendarView = root.findViewById(R.id.calendarView);
 
@@ -65,9 +69,9 @@ public class DashboardFragment extends Fragment implements OnEventClickListener 
                                             int dayOfMonth) {
                 String curDay = String.valueOf(dayOfMonth);
                 String Year = String.valueOf(year);
-                String Month = String.valueOf(month);
-                day = Year +"-"+ Month+"-" + curDay;
-                setDayEvents(day, name, studentId);
+                String Month = String.valueOf(month + 1);
+                date = Year +"-"+ Month+"-" + curDay;
+                setDayEvents(date, studentId);
             }
 
         });
@@ -83,15 +87,14 @@ public class DashboardFragment extends Fragment implements OnEventClickListener 
         // All the rooms
         RecyclerView eventsRecyclerView = view.findViewById(R.id.event_recyclerview);
         eventsRecyclerView.setHasFixedSize(true);
-        setDayEvents(day, name, studentId);
-        eventsAdapter = new Event_RecyclerViewAdapter( getContext(), setOfEvents );
+        setDayEvents(date, studentId);
+        eventsAdapter = new Event_RecyclerViewAdapter( getContext(), setOfEvents, this);
         eventsRecyclerView.setAdapter(eventsAdapter);
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
     }
-    private void setDayEvents(String date, String name, int studentId){
 
-
-        bookingDataService.getBookedTimesByDateByStudentById(name, date, studentId, new BookingDataService.EventsResponseListener() {
+    private void setDayEvents(String date, int studentId){
+        bookingDataService.getBookedTimesByDateByStudentById(date, studentId, new BookingDataService.EventsResponseListener() {
             @Override
             public void onError(String msg) {
                 Toast.makeText(getContext(), "smth wrong", Toast.LENGTH_SHORT).show();
@@ -99,17 +102,25 @@ public class DashboardFragment extends Fragment implements OnEventClickListener 
 
             @Override
             public void onResponse(List<BookingsModel> bookings) {
+                String[] roomNames = getActivity().getResources().getStringArray(R.array.room_names);
                 setOfEvents.clear();
                 for (int i = 0; i < bookings.size(); i++) {
-
+                    int bookingId = bookings.get(i).getBookingId();
                     String endTime = bookings.get(i).getEndTime();
                     String startTime = bookings.get(i).getStartTime();
-                    String location = String.valueOf(bookings.get(i).getRoomId());
-                    String editedStart = startTime.charAt(0) + startTime.charAt(1) + ":00";
-                    String editedEnd = endTime.charAt(0) + endTime.charAt(1) + ":00";
-                    String event = editedStart + "-" + editedEnd + ": " + location;
-                    setOfEvents.add(new EventModel(event));
+                    int roomId = bookings.get(i).getRoomId();
+                    String editedStart = startTime.substring(0,2) + "00";
+                    int editedEndInt = Integer.parseInt(endTime.substring(0,2)) + 1;
+                    String editedEnd = null;
+                    if (editedEndInt < 10) {
+                        editedEnd = "0" + editedEndInt + "00";
+                    } else {
+                        editedEnd = editedEndInt + "00";
+                    }
+                    String event = roomNames[roomId] + " from " + editedStart + "-" + editedEnd ;
+                    setOfEvents.add(new EventModel(event, bookingId));
                 }
+                eventsAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -118,5 +129,6 @@ public class DashboardFragment extends Fragment implements OnEventClickListener 
     @Override
     public void onEventClick(View view, int position) {
         //blob
+        eventsAdapter.notifyDataSetChanged();
     }
 }

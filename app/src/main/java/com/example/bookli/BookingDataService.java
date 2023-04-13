@@ -246,7 +246,7 @@ public class BookingDataService {
 
         void onResponse(List<BookingsModel> bookings);
     }
-    public void getBookedTimesByDateByStudentById(String name, String date, int studentId, EventsResponseListener eventsResponseListener){
+    public void getBookedTimesByDateByStudentById(String date, int studentId, EventsResponseListener eventsResponseListener){
         String s = "/student/" + studentId + "?startDate=" + date + "&endDate=" + date;
         String url = QUERY_FOR_BOOKINGS  + s; //in the gdoc, it also asks for string of rooms, is that *?
         List<BookingsModel> bookings = new ArrayList<>();
@@ -258,6 +258,7 @@ public class BookingDataService {
                     for (int i = 0; i < response.length(); i++) {
                         BookingsModel one_booking = new BookingsModel();
                         JSONObject booking = response.getJSONObject(i);
+                        one_booking.setBookingId(booking.getInt("bookingId"));
                         one_booking.setDate(booking.getString("date"));
                         one_booking.setEndTime(booking.getString("endTime"));
                         one_booking.setStartTime(booking.getString("startTime"));

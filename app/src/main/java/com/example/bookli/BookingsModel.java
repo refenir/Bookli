@@ -10,7 +10,7 @@ public class BookingsModel {
 
     public BookingsModel(){
     }
-    public BookingsModel(String date, String startTime, String endTime, int studentId, int roomId) {
+    public BookingsModel(int bookingId, String date, String startTime, String endTime, int studentId, int roomId) {
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -62,5 +62,5 @@ public class BookingsModel {
         return bookingId;
     }
 
-    public void setBookingId(int booking) {this.bookingId = bookingId;}
+    public void setBookingId(int bookingId) {this.bookingId = bookingId;}
 }
