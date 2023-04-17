@@ -152,11 +152,16 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
             public void onClick(View view) {
                 // get the selected timings
                 String[] times = getResources().getStringArray(R.array.times);
-                ArrayList<Integer> selectedTimePositions = timesAdapter.getSelectedItemPosition();
+                ArrayList<TimeButton> selectedTimePositions = timesAdapter.getSelectedItemPosition();
+                if (selectedTimePositions.isEmpty()) {
+                    Toast.makeText(getContext(), "Please select at least one time slot", Toast.LENGTH_SHORT).show();;
+                    return;
+                }
                 selectedTimes = new String[selectedTimePositions.size()];
                 for (int i = 0; i < selectedTimePositions.size(); i++){
-                    selectedTimes[i] = times[selectedTimePositions.get(i)];
+                    selectedTimes[i] = times[selectedTimePositions.get(i).getPosition()];
                 }
+                Arrays.sort(selectedTimes);
                 // get the selected date
                 TextView dateTextView = bottomSheetDialog.findViewById(R.id.date_selection);
                 String dateSelected = dateTextView.getText().toString();
@@ -282,9 +287,22 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
                 }
                 setUpTimeModels();
                 timesAdapter.notifyDataSetChanged();
-
             }
         });
+    }
+
+    private void setUpTimeModels(){
+        timeModels.clear();
+        String[] times = getResources().getStringArray(R.array.times);
+
+        for (int i = 0; i < times.length; i++){
+            String formattedTime = times[i].substring(0,2) + ":" + times[i].substring(2) + ":00";
+            if (setOfBookedTimings.contains(formattedTime)) {
+                timeModels.add(new TimeModel(times[i], false));
+            } else{
+                timeModels.add(new TimeModel(times[i], true));
+            }
+        }
     }
 
     private void setUpRoomModels(){
@@ -339,21 +357,6 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         });
     }
 
-
-    private void setUpTimeModels(){
-        timeModels.clear();
-        String[] times = getResources().getStringArray(R.array.times);
-
-        for (int i = 0; i < times.length; i++){
-            String formattedTime = times[i].substring(0,2) + ":" + times[i].substring(2) + ":00";
-            if (setOfBookedTimings.contains(formattedTime)) {
-                timeModels.add(new TimeModel(times[i], false));
-            } else{
-                timeModels.add(new TimeModel(times[i]));
-            }
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -386,7 +389,6 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         selectedRoomPosition = position;
         // disable unavailable times
         setTimeButtons(dateSelected.getText().toString(), selectedRoomPosition);
-        timesAdapter.notifyDataSetChanged();
         // make bottom sheet show up
         bottomSheetDialog.show();
     }

@@ -6,7 +6,7 @@ public class TimeModel {
 
     public TimeModel(String time) {
         this.time = time;
-        this.available = true;
+        this.available = false;
     }
 
     public TimeModel(String time, boolean available) {

@@ -6,6 +6,8 @@
     <Button
         android:layout_marginHorizontal="2dp"
         android:id="@+id/time_button"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:text="0900"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

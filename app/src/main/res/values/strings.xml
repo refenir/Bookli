@@ -3,7 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="search_input">Search...</string>
+    <string name="date_prompt">Select date</string>
     <string-array name="room_names">
         <item name="dr21">Discussion Room 2.1</item>
         <item name="dr22">Discussion Room 2.2</item>

@@ -18,13 +18,15 @@ import java.util.ArrayList;
 public class Time_RecyclerViewAdapter extends RecyclerView.Adapter<Time_RecyclerViewAdapter.MyViewHolder> {
     Context context;
     ArrayList<TimeModel> timeModels;
-    private ArrayList<Integer> selectedItemPosition = new ArrayList<>();
+    private ArrayList<TimeButton> selectedItemPosition = new ArrayList<>();
+    private static Button lastSelected = null;
+    private static int lastSelectedPos = 0;
     public Time_RecyclerViewAdapter(Context context, ArrayList<TimeModel> timeModels){
         this.context = context;
         this.timeModels = timeModels;
     }
 
-    public ArrayList<Integer> getSelectedItemPosition(){
+    public ArrayList<TimeButton> getSelectedItemPosition(){
         return selectedItemPosition;
     }
     public void clearSelectedItemPosition() { selectedItemPosition.clear(); }
@@ -39,18 +41,25 @@ public class Time_RecyclerViewAdapter extends RecyclerView.Adapter<Time_Recycler
 
     @Override
     public void onBindViewHolder(@NonNull Time_RecyclerViewAdapter.MyViewHolder holder, int position) {
+        TimeButton timeButton = new TimeButton(holder.timeButton, position);
         holder.timeButton.setText(timeModels.get(position).getTime());
         holder.timeButton.setEnabled(timeModels.get(position).getAvailability());
         holder.timeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (selectedItemPosition.contains(holder.getBindingAdapterPosition())) {
-                    selectedItemPosition.remove(Integer.valueOf(holder.getBindingAdapterPosition()));
-                    holder.timeButton.setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_primary, null));
-                } else {
-                    selectedItemPosition.add(holder.getBindingAdapterPosition());
-                    holder.timeButton.setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_secondary, null));
+                if (selectedItemPosition.contains(timeButton)) {
+                    selectedItemPosition.remove(timeButton);
+                    timeButton.getTimeButton().setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_secondaryContainer, null));
+                } else if (selectedItemPosition.size() >= 2) {
+                    selectedItemPosition.add(timeButton);
+                    TimeButton removedButton = selectedItemPosition.remove(0);
+                    removedButton.getTimeButton().setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_secondaryContainer, null));
+                    timeButton.getTimeButton().setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_secondary, null));
+                }else {
+                    selectedItemPosition.add(timeButton);
+                    timeButton.getTimeButton().setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_secondary, null));
                 }
+
             }
         });
 

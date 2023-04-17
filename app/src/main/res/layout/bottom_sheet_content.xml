@@ -51,21 +51,33 @@
             app:icon="@drawable/baseline_arrow_right_24"/>
 
     </LinearLayout>
+    <TextView
+        android:id="@+id/time_select_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select start and end time for your booking \n (1 hour block of end time included in booking)"
+        android:layout_below="@id/date_selection_container"
+        android:layout_marginBottom="@dimen/margin_between_views"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.Material3.BodySmall"/>
     
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/time_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/date_selection_container"
+        android:layout_below="@id/time_select_hint"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
 
     <Button
         android:id="@+id/book_button"
-        android:layout_width="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginVertical="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:layout_below="@id/time_recyclerview"
+        android:layout_centerInParent="true"
+        style="@style/Widget.Material3.Button.ElevatedButton"
         android:text="Book" />
 
 </RelativeLayout>
