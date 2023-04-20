@@ -180,7 +180,6 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
                     @Override
                     public void onResponse(int bookingId) {
                         timesAdapter.clearSelectedItemPosition();
-                        Toast.makeText(getContext(), "Response:" + bookingId, Toast.LENGTH_SHORT).show();
                         // pass data to booking confirmation screen
                         Intent intent = new Intent(getActivity(), BookingConfirmationActivity.class);
                         intent.putExtra("selectedTimes", selectedTimes);

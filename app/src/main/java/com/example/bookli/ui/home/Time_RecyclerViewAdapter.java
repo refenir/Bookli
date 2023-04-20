@@ -50,14 +50,18 @@ public class Time_RecyclerViewAdapter extends RecyclerView.Adapter<Time_Recycler
                 if (selectedItemPosition.contains(timeButton)) {
                     selectedItemPosition.remove(timeButton);
                     timeButton.getTimeButton().setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_secondaryContainer, null));
+                    timeButton.getTimeButton().setTextColor(Color.BLACK);
                 } else if (selectedItemPosition.size() >= 2) {
                     selectedItemPosition.add(timeButton);
                     TimeButton removedButton = selectedItemPosition.remove(0);
                     removedButton.getTimeButton().setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_secondaryContainer, null));
+                    removedButton.getTimeButton().setTextColor(Color.BLACK);
                     timeButton.getTimeButton().setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_secondary, null));
+                    timeButton.getTimeButton().setTextColor(Color.WHITE);
                 }else {
                     selectedItemPosition.add(timeButton);
                     timeButton.getTimeButton().setBackgroundColor(holder.timeButton.getContext().getResources().getColor(R.color.md_theme_light_secondary, null));
+                    timeButton.getTimeButton().setTextColor(Color.WHITE);
                 }
 
             }

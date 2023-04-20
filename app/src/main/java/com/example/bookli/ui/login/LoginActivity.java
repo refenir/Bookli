@@ -112,17 +112,17 @@ public class LoginActivity extends AppCompatActivity {
         nameEditText.addTextChangedListener(afterTextChangedListener);
         studentIdEditText.addTextChangedListener(afterTextChangedListener);
 
-        studentIdEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(nameEditText.getText().toString(),
-                            studentIdEditText.getText().toString());
-                }
-                return false;
-            }
-        });
+//        studentIdEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                    loginViewModel.login(nameEditText.getText().toString(),
+//                            studentIdEditText.getText().toString());
+//                }
+//                return false;
+//            }
+//        });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
