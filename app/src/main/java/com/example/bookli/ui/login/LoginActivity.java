@@ -1,7 +1,5 @@
 package com.example.bookli.ui.login;
 
-import android.app.Activity;
-
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -11,33 +9,27 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.bookli.BookingDataService;
+import com.example.bookli.data.BookingDataService;
 import com.example.bookli.MainActivity;
 import com.example.bookli.R;
-import com.example.bookli.UserModel;
+import com.example.bookli.data.UserModel;
 import com.example.bookli.databinding.ActivityLoginBinding;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class LoginActivity extends AppCompatActivity {
+    public final String sharedPrefFile = "com.example.android.mainsharedpref";
 
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
     BookingDataService bookingDataService;
-    SharedPreferences prefs;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         final Button loginButton = binding.login;
         final ProgressBar loadingProgressBar = binding.loading;
 
+        // check if data is valid
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
             public void onChanged(@Nullable LoginFormState loginFormState) {
@@ -69,26 +62,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginFormState.getStudentIdError() != null) {
                     studentIdEditText.setError(getString(loginFormState.getStudentIdError()));
                 }
-            }
-        });
-
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
-            @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-                loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
-                }
-                setResult(Activity.RESULT_OK);
-
-                //Complete and destroy login activity once successful
-                finish();
             }
         });
 
@@ -112,24 +85,17 @@ public class LoginActivity extends AppCompatActivity {
         nameEditText.addTextChangedListener(afterTextChangedListener);
         studentIdEditText.addTextChangedListener(afterTextChangedListener);
 
-//        studentIdEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                    loginViewModel.login(nameEditText.getText().toString(),
-//                            studentIdEditText.getText().toString());
-//                }
-//                return false;
-//            }
-//        });
-
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // store that user has logged in, they don't have to login again
+                SharedPreferences pref = getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE);
+                SharedPreferences.Editor edt = pref.edit();
+                edt.putBoolean("activity_executed", true);
+                edt.apply();
+
                 loadingProgressBar.setVisibility(View.VISIBLE);
-//                loginViewModel.login(nameEditText.getText().toString(),
-//                        studentIdEditText.getText().toString());
                 bookingDataService.postStudentInfo(Integer.parseInt(studentIdEditText.getText().toString()),
                         nameEditText.getText().toString(),
                         new BookingDataService.PostStudentInfoResponseListener() {
@@ -146,24 +112,11 @@ public class LoginActivity extends AppCompatActivity {
                                 intent.putExtra("phoneNumber", userModel.getPhoneNumber());
                                 intent.putExtra("email", userModel.getEmail());
                                 startActivity(intent);
+                                finish();
                             }
                         });
             }
         });
 
-        SharedPreferences pref = getSharedPreferences("AcitivityPref", Context.MODE_PRIVATE);
-        SharedPreferences.Editor edt = pref.edit();
-        edt.putBoolean("activity_executed", true);
-        edt.apply();
-    }
-
-    private void updateUiWithUser(LoggedInUserView model) {
-//        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-//        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-    }
-
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 }

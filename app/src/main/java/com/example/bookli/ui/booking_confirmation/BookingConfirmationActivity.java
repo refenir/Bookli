@@ -4,20 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.bookli.BookingDataService;
-import com.example.bookli.MainActivity;
+import com.example.bookli.data.BookingDataService;
 import com.example.bookli.R;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -41,6 +36,8 @@ public class BookingConfirmationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         bookingDataService = new BookingDataService(this);
         setContentView(R.layout.activity_booking_confirmation);
+
+        // get the extras from the intent passed from MainActivity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             roomName = extras.getString("selectedRoom");
@@ -50,6 +47,7 @@ public class BookingConfirmationActivity extends AppCompatActivity {
             bookingId = extras.getInt("bookingId");
         }
 
+        // make sure the earlier time comes first
         Arrays.sort(selectedTimes, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
@@ -57,9 +55,11 @@ public class BookingConfirmationActivity extends AppCompatActivity {
             }
         });
 
+        // show booked room's name
         roomTextView = findViewById(R.id.textView);
         roomTextView.setText("Room: " + roomName );
 
+        // show duration of booking
         timesTextView = findViewById(R.id.textView7);
         String startTime = selectedTimes[0];
         String endTime = selectedTimes[selectedTimes.length - 1];
@@ -72,12 +72,15 @@ public class BookingConfirmationActivity extends AppCompatActivity {
         String duration = startTime + " - " + endTime;
         timesTextView.setText("Time: " + duration);
 
+        // show date of booking
         dateTextView = findViewById(R.id.textView6);
         dateTextView.setText("Date: " + selectedDate);
 
+        // show image of booked room
         imageView = findViewById(R.id.imageView);
         imageView.setImageResource(roomImage);
 
+        // delete booking on the spot
         delete = findViewById(R.id.delete_button);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +100,7 @@ public class BookingConfirmationActivity extends AppCompatActivity {
             }
         });
 
+        // share details of booking using Telegram using implicit intent
         share = findViewById(R.id.share_button1);
         share.setOnClickListener(new View.OnClickListener() {
             @Override

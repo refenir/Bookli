@@ -2,6 +2,7 @@ package com.example.bookli.ui.home;
 
 import android.widget.Button;
 
+// used in time recyclerview so that the buttons and their adapter position can be stored together
 public class TimeButton {
     private Button timeButton;
     private int position;

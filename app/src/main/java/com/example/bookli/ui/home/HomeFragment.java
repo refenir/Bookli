@@ -1,13 +1,15 @@
 package com.example.bookli.ui.home;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,8 +22,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookli.BookingDataService;
-import com.example.bookli.BookingsModel;
+import com.example.bookli.data.BookingDataService;
+import com.example.bookli.data.BookingsModel;
 import com.example.bookli.R;
 import com.example.bookli.databinding.FragmentHomeBinding;
 import com.example.bookli.ui.booking_confirmation.BookingConfirmationActivity;
@@ -44,7 +46,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-public class HomeFragment extends Fragment implements OnRoomClickListener, OnTimeClickListener {
+public class HomeFragment extends Fragment implements OnRoomClickListener{
 
     private FragmentHomeBinding binding;
     ArrayList<RoomModel> roomModels = new ArrayList<>();
@@ -73,20 +75,20 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     String phoneNumber;
     TextInputEditText dateEdit;
     Boolean[] roomAvailability = new Boolean[4];
-
+    public final String sharedPrefFile = "com.example.android.mainsharedpref";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // store the unavailable timings
         setOfBookedTimings = new HashSet<String>();
 
-        HomeViewModel homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
 
         bookingDataService = new BookingDataService(getContext());
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        SharedPreferences pref = getActivity().getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE);
 
         // get user details from MainActivity
         Bundle bundle = requireActivity().getIntent().getExtras();
@@ -95,6 +97,11 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
             studentId = bundle.getInt("studentId");
             phoneNumber = bundle.getString("phoneNumber");
             email = bundle.getString("email");
+        } else {
+            name = pref.getString("name", "");
+            studentId = pref.getInt("studentId", 1000000);
+            phoneNumber = pref.getString("phoneNumber", "");
+            email = pref.getString("email", "");
         }
 
         // bottom sheet that shows time and book button
@@ -154,7 +161,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
                 String[] times = getResources().getStringArray(R.array.times);
                 ArrayList<TimeButton> selectedTimePositions = timesAdapter.getSelectedItemPosition();
                 if (selectedTimePositions.isEmpty()) {
-                    Toast.makeText(getContext(), "Please select at least one time slot", Toast.LENGTH_SHORT).show();;
+                    Toast.makeText(getContext(), "Please select at least one time slot", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 selectedTimes = new String[selectedTimePositions.size()];
@@ -174,7 +181,6 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
                 bookingDataService.makeBooking(dateSelected, selectedTimes[0], selectedTimes[selectedTimes.length-1], selectedRoomPosition, studentId, occupantDetails, new BookingDataService.MakeBookingResponseListener() {
                     @Override
                     public void onError(String msg) {
-                        Toast.makeText(getContext(), msg.toString(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -205,7 +211,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                 .setCalendarConstraints(constraintsBuilder.build())
                 .build();
-
+        //  when they press ok on the date picker
         datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
 
             @Override
@@ -240,12 +246,13 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         RecyclerView roomsRecyclerView = view.findViewById(R.id.room_recyclerview);
         roomsRecyclerView.setHasFixedSize(true);
         SimpleDateFormat dateFormatBackend = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String currDate = null;
+        String currDate;
         try {
             currDate = dateFormatBackend.format(formatDate(dateEdit.getText().toString()));
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+        // see if the room is available on the date selected
         roomAvailability(currDate);
         roomsAdapter = new Room_RecyclerViewAdapter( getContext(), roomModels, this);
         roomsRecyclerView.setAdapter(roomsAdapter);
@@ -253,7 +260,6 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
 
         // All the times
         timesRecyclerView = bottomSheetDialog.findViewById(R.id.time_recyclerview);
-        timesRecyclerView.setHasFixedSize(true);
         setUpTimeModels();
         timesAdapter = new Time_RecyclerViewAdapter(getContext(), timeModels);
         timesRecyclerView.setAdapter(timesAdapter);
@@ -314,7 +320,7 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
             );
         }
     }
-
+     // see if room is available on a selected date
     private void roomAvailability(String date){
         bookingDataService.getBookedTimesByDate(date, -1, new BookingDataService.BookingResponseListener() {
             @Override
@@ -357,8 +363,15 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        timesAdapter.clearSelectedItemPosition();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+        // reset the recyclerviews and update them with new bookings
         timesAdapter.clearSelectedItemPosition();
         setTimeButtons(dateSelected.getText().toString(), selectedRoomPosition);
         SimpleDateFormat dateFormatBackend = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -390,10 +403,6 @@ public class HomeFragment extends Fragment implements OnRoomClickListener, OnTim
         setTimeButtons(dateSelected.getText().toString(), selectedRoomPosition);
         // make bottom sheet show up
         bottomSheetDialog.show();
-    }
-// maybe useless, delete
-    @Override
-    public void onTimeClick(int position) {
     }
 
     // Change date from "dd MMM yyy" format to "yyyy-MM-dd"

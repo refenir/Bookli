@@ -1,7 +1,8 @@
-package com.example.bookli;
+package com.example.bookli.data;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class BookingDataService {
 
-    // change according to ip address of the server
+    // TODO: change ip address to your localhosts' ip address
     public static final String QUERY_FOR_BOOKINGS = "http://10.16.61.159:8080/bookings";
     public static final String QUERY_FOR_STUDENT = "http://10.16.61.159:8080/students";
     Context context;
@@ -28,6 +29,7 @@ public class BookingDataService {
         this.context = context;
     }
 
+    // response listener so that code will run after response is received
     public interface BookingResponseListener {
         void onError(String msg);
 
@@ -109,7 +111,7 @@ public class BookingDataService {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    Toast.makeText(context, "Booking conflict", Toast.LENGTH_SHORT).show();
                     Log.d("VOLLEY", "post failed");
                     error.printStackTrace();
                 }
@@ -123,7 +125,6 @@ public class BookingDataService {
         }
     }
 
-    // delete a booking
     public interface DeleteBookingResponseListener {
         void onError(String msg);
 
@@ -248,7 +249,7 @@ public class BookingDataService {
     }
     public void getBookedTimesByDateByStudentById(String date, int studentId, EventsResponseListener eventsResponseListener){
         String s = "/student/" + studentId + "?startDate=" + date + "&endDate=" + date;
-        String url = QUERY_FOR_BOOKINGS  + s; //in the gdoc, it also asks for string of rooms, is that *?
+        String url = QUERY_FOR_BOOKINGS  + s;
         List<BookingsModel> bookings = new ArrayList<>();
         // get json object
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {

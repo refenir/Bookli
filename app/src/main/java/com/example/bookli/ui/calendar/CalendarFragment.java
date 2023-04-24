@@ -1,5 +1,7 @@
 package com.example.bookli.ui.calendar;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +13,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.bookli.R;
-import com.example.bookli.databinding.FragmentDashboardBinding;
-import com.example.bookli.BookingDataService;
-import com.example.bookli.BookingsModel;
+import com.example.bookli.databinding.FragmentCalendarBinding;
+import com.example.bookli.data.BookingDataService;
+import com.example.bookli.data.BookingsModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,32 +28,35 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class DashboardFragment extends Fragment implements OnEventClickListener {
-    private FragmentDashboardBinding binding;
+public class CalendarFragment extends Fragment{
+    private FragmentCalendarBinding binding;
     ArrayList<EventModel> eventModels = new ArrayList<>();
     ArrayList<EventModel> eventData = new ArrayList<>();
     String date;
-    RelativeLayout events;
     Event_RecyclerViewAdapter eventsAdapter;
     BookingDataService bookingDataService = new BookingDataService(getContext());
     ArrayList<EventModel> setOfEvents = new ArrayList<>();
     String name;
     int studentId;
     Calendar c;
+    public final String sharedPrefFile = "com.example.android.mainsharedpref";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        SharedPreferences pref = getActivity().getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE);
+
         // getting name and student id from login page
         Bundle extras = requireActivity().getIntent().getExtras();
         if (extras != null) {
             name = extras.getString("name");
             studentId = extras.getInt("studentId");
+        } else {
+            name = pref.getString("name", "");
+            studentId = pref.getInt("studentId", -1);
         }
-        DashboardViewModel dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        binding = FragmentCalendarBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         c = Calendar.getInstance();
@@ -84,16 +88,17 @@ public class DashboardFragment extends Fragment implements OnEventClickListener 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // All the rooms
+        // All the bookings of student
         RecyclerView eventsRecyclerView = view.findViewById(R.id.event_recyclerview);
         eventsRecyclerView.setHasFixedSize(true);
         setDayEvents(date, studentId);
-        eventsAdapter = new Event_RecyclerViewAdapter( getContext(), setOfEvents, this);
+        eventsAdapter = new Event_RecyclerViewAdapter( getContext(), setOfEvents);
         eventsRecyclerView.setAdapter(eventsAdapter);
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
     }
 
     private void setDayEvents(String date, int studentId){
+        // get the bookings of the student
         bookingDataService.getBookedTimesByDateByStudentById(date, studentId, new BookingDataService.EventsResponseListener() {
             @Override
             public void onError(String msg) {
@@ -123,12 +128,5 @@ public class DashboardFragment extends Fragment implements OnEventClickListener 
                 eventsAdapter.notifyDataSetChanged();
             }
         });
-    }
-
-
-    @Override
-    public void onEventClick(View view, int position) {
-        //blob
-        eventsAdapter.notifyDataSetChanged();
     }
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -28,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="@dimen/activity_vertical_margin"
                 android:layout_marginVertical="@dimen/margin_between_views"
-                android:text="1000-1100: Discussion Room 2.2"
+                android:text="@string/_1000_1100_discussion_room_2_2"
                 android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
                 android:textStyle="bold">
 
@@ -50,7 +49,7 @@
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:layout_weight="1"
                     android:backgroundTint="@color/md_theme_light_tertiary"
-                    android:text="Share"
+                    android:text="@string/share"
                     android:minHeight="0dp"
                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                     android:textStyle="bold"/>
@@ -62,7 +61,7 @@
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:layout_weight="1"
                     android:backgroundTint="@color/md_theme_light_error"
-                    android:text="Delete"
+                    android:text="@string/delete"
                     android:minHeight="0dp"
                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                     android:textStyle="bold"/>

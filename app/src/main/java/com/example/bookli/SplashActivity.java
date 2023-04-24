@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.example.bookli.ui.login.LoginActivity;
 
+// toggler between MainActivity and LoginActivity
 public class SplashActivity extends Activity {
     public final String sharedPrefFile = "com.example.android.mainsharedpref";
     @Override

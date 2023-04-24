@@ -2,7 +2,7 @@ package com.example.bookli.ui.profile;
 import androidx.annotation.Nullable;
 
 /**
- * Data validation state of the login form.
+ * Data validation state of the profile form.
  */
 class ProfileFormState {
     @Nullable

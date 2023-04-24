@@ -3,6 +3,7 @@ package com.example.bookli.ui.profile;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +21,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.bookli.BookingDataService;
-import com.example.bookli.MainActivity;
+import com.example.bookli.data.BookingDataService;
 import com.example.bookli.R;
-import com.example.bookli.UserModel;
+import com.example.bookli.data.UserModel;
 import com.example.bookli.databinding.FragmentProfileBinding;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener{
@@ -43,7 +44,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     String email;
     BookingDataService bookingDataService;
     public final String sharedPrefFile = "com.example.android.mainsharedpref";
-    SharedPreferences prefs;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -56,15 +56,23 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
         bookingDataService = new BookingDataService(getContext());
 
+        SharedPreferences pref = getActivity().getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE);
+
+
         studentId = -1;
         name = null;
         phoneNumber = null;
         email = null;
 
-        Bundle extras = requireActivity().getIntent().getExtras();
+        Bundle extras = getActivity().getIntent().getExtras();
         if (extras != null) {
             studentId = extras.getInt("studentId");
             name = extras.getString("name");
+        } else {
+            name = pref.getString("name", "");
+            studentId = pref.getInt("studentId", 1000000);
+            email = pref.getString("email", "");
+            phoneNumber = pref.getString("phoneNumber", "");
         }
 
         nameEdit = binding.nameEdit;
@@ -130,6 +138,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         phoneEdit.addTextChangedListener(afterTextChangedListener);
 
         return root;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        SharedPreferences pref = getActivity().getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE);
+        SharedPreferences.Editor edt = pref.edit();
+        edt.putString("name", name);
+        edt.putInt("studentId", studentId);
+        edt.putString("email", email);
+        edt.putString("phoneNumber", phoneNumber);
+        Log.d("profile pause", pref.getAll().toString());
+
+        edt.apply();
     }
 
     @Override

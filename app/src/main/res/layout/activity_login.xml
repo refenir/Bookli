@@ -43,7 +43,7 @@
         android:id="@+id/student_id_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Student ID"
+        android:hint="@string/student_id"
         app:layout_constraintTop_toBottomOf="@id/name_wrapper"
         android:layout_marginTop="@dimen/margin_between_views">
 
@@ -69,7 +69,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="30dp"
         android:enabled="false"
-        android:text="Log in"
+        android:text="@string/log_in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

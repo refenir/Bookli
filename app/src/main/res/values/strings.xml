@@ -62,6 +62,22 @@
     <string name="title_schedule">Schedule</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_phone_number">Phone Number</string>
+    <string name="student_id">Student ID</string>
+    <string name="log_in">Log in</string>
+    <string name="delete">Delete</string>
+    <string name="date_date1">Date: DATE1</string>
+    <string name="time_time1">Time: TIME1</string>
+    <string name="room_room1">Room: ROOM1</string>
+    <string name="room_image">Room Image</string>
+    <string name="discussion_room_2_1">Discussion Room 2.1</string>
+    <string name="date">Date</string>
+    <string name="select_start_and_end_time_for_your_booking_n_1_hour_block_of_end_time_included_in_booking">Select start and end time for your booking \n (1 hour block of end time included in booking)</string>
+    <string name="book">Book</string>
+    <string name="user_profile">User Profile</string>
+    <string name="submit">SUBMIT</string>
+    <string name="_1000_1100_discussion_room_2_2">1000-1100: Discussion Room 2.2</string>
+    <string name="_0900">0900</string>
+    <string name="scan">Scan</string>
 
 
 </resources>

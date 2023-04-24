@@ -1,6 +1,7 @@
 package com.example.bookli.ui.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookli.R;
+import com.example.bookli.ui.login.LoginActivity;
 
 import java.util.ArrayList;
 
@@ -29,7 +31,10 @@ public class Time_RecyclerViewAdapter extends RecyclerView.Adapter<Time_Recycler
     public ArrayList<TimeButton> getSelectedItemPosition(){
         return selectedItemPosition;
     }
-    public void clearSelectedItemPosition() { selectedItemPosition.clear(); }
+    public void clearSelectedItemPosition() {
+        selectedItemPosition.clear();
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
@@ -44,6 +49,8 @@ public class Time_RecyclerViewAdapter extends RecyclerView.Adapter<Time_Recycler
         TimeButton timeButton = new TimeButton(holder.timeButton, position);
         holder.timeButton.setText(timeModels.get(position).getTime());
         holder.timeButton.setEnabled(timeModels.get(position).getAvailability());
+        // set the behaviour of how button react when tapped
+        // selected buttons become darker, only 2 buttons can be selected at one time (start and end)
         holder.timeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

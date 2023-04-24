@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookli.BookingDataService;
+import com.example.bookli.data.BookingDataService;
 import com.example.bookli.R;
 
 import java.util.ArrayList;
@@ -21,14 +21,12 @@ public class Event_RecyclerViewAdapter extends RecyclerView.Adapter<Event_Recycl
 
     Context context;
     ArrayList<EventModel> eventModels;
-    private final OnEventClickListener clickListener;
     BookingDataService bookingDataService;
 
-    public Event_RecyclerViewAdapter(Context context, ArrayList<EventModel> eventModels,
-                                     OnEventClickListener clickListener){
+    public Event_RecyclerViewAdapter(Context context, ArrayList<EventModel> eventModels){
         this.context = context;
         this.eventModels = eventModels;
-        this.clickListener = clickListener;
+
     }
     @NonNull
     @Override
@@ -37,7 +35,7 @@ public class Event_RecyclerViewAdapter extends RecyclerView.Adapter<Event_Recycl
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recycler_view_event, parent, false);
 
-        return new Event_RecyclerViewAdapter.MyViewHolder(view, clickListener);
+        return new Event_RecyclerViewAdapter.MyViewHolder(view);
     }
 
     @Override
@@ -85,7 +83,7 @@ public class Event_RecyclerViewAdapter extends RecyclerView.Adapter<Event_Recycl
         return eventModels.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder implements OnEventClickListener{
+    public static class MyViewHolder extends RecyclerView.ViewHolder{
         // Grabbing views from recycler_view_row layout file
 
         TextView duration;
@@ -93,29 +91,11 @@ public class Event_RecyclerViewAdapter extends RecyclerView.Adapter<Event_Recycl
         Button deleteButton;
 
 
-        public MyViewHolder(@NonNull View itemView, OnEventClickListener clickListener) {
+        public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             duration = itemView.findViewById(R.id.duration);
             shareButton = itemView.findViewById(R.id.share_button);
             deleteButton = itemView.findViewById(R.id.delete_button);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (clickListener != null) {
-                        int pos = getBindingAdapterPosition();
-                        if (pos != RecyclerView.NO_POSITION){
-                            clickListener.onEventClick(view, pos);
-                        }
-                    }
-
-                }
-            });
-        }
-
-        @Override
-        public void onEventClick(View view, int position) {
-
         }
     }
 }

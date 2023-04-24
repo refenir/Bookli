@@ -1,4 +1,4 @@
-package com.example.bookli;
+package com.example.bookli.data;
 
 public class BookingsModel {
     String date;
